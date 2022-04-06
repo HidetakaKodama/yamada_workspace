@@ -1,6 +1,6 @@
 package ex4;
 
-public class ifSample1 {
+public class IfSample1 {
 	public static void main(String[]arg2) {
 		String str = "くもり";
 
