@@ -11,4 +11,8 @@ public class B2 {
 			System.out.println("");
 		}
 	}
+	private void sysout() {
+		// TODO 自動生成されたメソッド・スタブ
+
+	}
 }
