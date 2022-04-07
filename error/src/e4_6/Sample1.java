@@ -6,7 +6,7 @@ public class Sample1 {
 		String i = "Hello";
 		String j = "Wrold";
 
-		System.out.println("こんにちは =" + i , "世界 =" + j);
+		System.out.println("こんにちは =" + i , ", 世界 =" + j);
 	}
 }
 
@@ -31,5 +31,5 @@ public class Sample1 {
 //System.out.println("こんにちは =" + i);
 //System.out.println("世界 =" + j);
 //と別々の記述するか。
-//System.out.println("こんにちは =" + i + "世界 =" + j);
+//System.out.println("こんにちは =" + i + ", 世界 =" + j);
 //というように文章をつなげる場合は[,]ではなく「＋」で記述する。
