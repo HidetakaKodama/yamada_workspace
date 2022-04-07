@@ -4,8 +4,8 @@ public class C1 {
 	public static void main(String[]args) {
 		int[] a = {18, -4, 12, 0, 25, -18};
 		int i,j;
-		System.out.println("そろえる前： 18,-4,12,0,25,-18");
-		System.out.print("そろえた後：");
+		System.out.println("ソート前： 18,-4,12,0,25,-18");
+		System.out.print("ソート後：");
 		for (i = 0; i < a.length - 1; i++) {
 			for (j = i; j < a.length; j++) {
 				if (a[i] >= a[j]) {
