@@ -2,18 +2,21 @@ package ex_B2;
 
 public class B2 {
 	public static void main(String[]args) {
-		String[][] scores = {
-				{"スーパー1", "100円", "150円", "200円"},
-				{"スーパー2", "200円", "110円", "220円"},
-				{"スーパー3", "250円", "160円", "150円"}
+		String[][] num = {
+				{"100円", "150円", "200円"},
+				{"200円", "110円", "220円"},
+				{"250円", "160円", "150円"}
 		};
 
-		String num = "";
-		for(int i = 0; i < scores.length; i++ ) {
-			for(int j = 0; j<scores[i].length; j++){
-				num += scores[i][j];
+		System.out.print("\t"+"\t"+"\t");
+		System.out.println("卵"+"\t"+"\t"+"牛乳"+"\t"+"キャベツ");
+		for (int i = 0; i < num.length; i++) {
+			System.out.print("スーパー" + (i + 1) );
+
+			for (int j = 0; j < num[i].length; j++) {
+				System.out.print("\t" + num[i][j] );
 			}
+			System.out.println();
 		}
-		System.out.print(num);
 	}
 }
