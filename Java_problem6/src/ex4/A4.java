@@ -3,7 +3,7 @@ package ex4;
 import java.util.Scanner;
 
 public class A4 {
-	public static void main(String[]args) {
+	public static void main(String[] args) {
 		System.out.println("おいくらまでお出ししますか？");
 		Scanner i = new Scanner(System.in);
 		int price = i.nextInt();

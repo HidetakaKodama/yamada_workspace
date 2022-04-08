@@ -1,7 +1,7 @@
 package ex8;
 
 public class MethodSample2 {
-	public static void main(String[]args) {
+	public static void main(String[] args) {
 		double num1 = 40.5;
 		double num2 = 50.5;
 

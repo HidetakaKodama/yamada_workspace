@@ -1,4 +1,4 @@
-package e4_6;
+package e4_7;
 
 public class Sample1 {
 	public static void main(String[]args) {
