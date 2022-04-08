@@ -1,7 +1,7 @@
 package e4_7;
 
 public class Sample1 {
-	public static void main(String[]args) {
+	public static void main(String[] args) {
 
 		String i = "Hello";
 		String j = "Wrold";
