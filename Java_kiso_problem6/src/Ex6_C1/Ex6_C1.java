@@ -19,18 +19,17 @@ public class Ex6_C1 {
 		showHand("相手が出したものは？", hand2);
 
 		System.out.println();
-		if (hand1 == hand2) {
+		if ((hand1 == 1 && hand2 == 2) || (hand1 == 2 && hand2 == 3)|| (hand1 == 3 && hand2 == 1)) {
+		System.out.println("あなたの勝ちです！");
+		}else if (hand1 == hand2) {
 			System.out.println("あいこです！");
-		} else if ((hand1 == 1 && hand2 == 2)
-			|| (hand1 == 2 && hand2 == 3)|| (hand1 == 3 && hand2 == 1)) {
-			System.out.println("あなたの勝ちです！");
 		} else {
 			System.out.println("あなたの負けです・・・。");
 		}
 		System.out.println();
 	}
 
-	public static void showHand(String name, int hand) {
+	public static void showHand(String name, int hand) { //何を見せるか
 		switch (hand) {
 		case 0:
 			System.out.println(name + "：グー");
