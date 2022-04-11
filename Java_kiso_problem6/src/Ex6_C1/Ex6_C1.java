@@ -5,53 +5,40 @@ import java.util.Scanner;
 
 public class Ex6_C1 {
 	public static void main(String[] args) {
+		Calc_janken();
 		}
 
-	public static void janken() {
-		System.out.println("何を出すか決めてください [グー：1][チョキ：2][パー：3]");
+	public static void Calc_janken() {
+		System.out.println("何を出すか決めてください [グー：0][チョキ：1][パー：2]");
 		Scanner s = new Scanner(System.in);
 		int hand1 = s.nextInt();
+		showHand("あなたが出したものは？", hand1);
 
-			janken();
-		System.out.println("相手が出したものは？");
 		Random rand = new Random();
 		int hand2 = rand.nextInt(3) + 1;
+		showHand("相手が出したものは？", hand2);
 
-		// プレイヤーの手を表示
-		showHand("あなた", hand1);
-
-		// コンピュータの手を表示
-		showHand("コンピュータ", hand2);
-
-		// 勝者を表示
+		System.out.println();
 		if (hand1 == hand2) {
-
-			// あいこ
 			System.out.println("あいこです！");
 		} else if ((hand1 == 1 && hand2 == 2)
-			|| (hand1 == 2 && hand2 == 3)
-			|| (hand1 == 3 && hand2 == 1)) {
-
-			// プレイヤーが勝ち
+			|| (hand1 == 2 && hand2 == 3)|| (hand1 == 3 && hand2 == 1)) {
 			System.out.println("あなたの勝ちです！");
 		} else {
-
-			// コンピュータが勝ち
-			System.out.println("コンピュータの勝ちです！");
+			System.out.println("あなたの負けです・・・。");
 		}
 		System.out.println();
 	}
 
-	// 手と名前を表示するメソッド
-	static void showHand(String name, int hand) {
+	public static void showHand(String name, int hand) {
 		switch (hand) {
-		case 1:
+		case 0:
 			System.out.println(name + "：グー");
 			break;
-		case 2:
+		case 1:
 			System.out.println(name + "：チョキ");
 			break;
-		case 3:
+		case 2:
 			System.out.println(name + "：パー");
 			break;
 		}
