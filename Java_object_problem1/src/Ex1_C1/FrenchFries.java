@@ -1,5 +1,8 @@
 package Ex1_C1;
-
+/**
+ * ここではサイドメニューのサイズをユーザーに１～３の数字の中から選んでもらう。
+ * サイドメニューの名前はorderMainの中でコンストラクタを用いて入力をしている。
+ */
 import java.util.Scanner;
 
 public class FrenchFries {
@@ -10,11 +13,11 @@ public class FrenchFries {
 	}
 
 	int selectSize() {
-		Scanner s = new Scanner(System.in);
-		int size = s.nextInt();
-
-		System.out.println(name);
+		System.out.println(name);//ポテト(orderMain)
 		System.out.println("1:S、2:M、3:L");
+
+		Scanner s = new Scanner(System.in);//サイドメニューのサイズを１～３で選ぶ
+		int size = s.nextInt();
 
 		switch(size) {
 		case 1:
