@@ -1,4 +1,4 @@
-package Sansyou;
+package sansyou;
 
 public class StudentRefMain {
 	public static void main(String[] args) {

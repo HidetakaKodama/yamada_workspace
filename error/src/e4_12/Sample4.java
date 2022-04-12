@@ -25,6 +25,8 @@ public class Sample4 {
 }
 
 
+
+//
 //エラーコード
 //
 //Exception in thread "main" java.lang.Error: Unresolved compilation pr oblem:

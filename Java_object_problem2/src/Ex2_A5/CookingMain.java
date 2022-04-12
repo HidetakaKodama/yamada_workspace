@@ -1,0 +1,5 @@
+package Ex2_A5;
+
+public class CookingMain {
+
+}
