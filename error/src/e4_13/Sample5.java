@@ -32,7 +32,7 @@ public class Sample5 {
 //
 //エラー内容
 //
-//static(クラスメソッド)ではないtotalNumメソッドをstaticのmainメソッドから参照することはできないです。
+//static(クラスメソッド)ではないtotalNumメソッドをstatic(クラスメソッド)のmainメソッドから参照することはできないです。
 //クラス全体の処理に関わるエラー。
 //
 //
