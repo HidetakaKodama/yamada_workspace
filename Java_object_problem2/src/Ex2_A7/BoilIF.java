@@ -1,6 +1,6 @@
-package Ex2_A5;
+package Ex2_A7;
 
-public class Boil extends Cooking{
+public class BoilIF implements ICooking{
 	@Override
 	public void cook() {
 		System.out.println("煮ます。");

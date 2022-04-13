@@ -1,6 +1,6 @@
-package Ex2_A5;
+package Ex2_A7;
 
-public class Bake extends Cooking{
+public class BakeIF implements ICooking{
 	@Override
 	public void cook() {
 		System.out.println("焼きます。");
