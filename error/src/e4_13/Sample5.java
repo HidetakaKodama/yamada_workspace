@@ -32,12 +32,12 @@ public class Sample5 {
 //
 //エラー内容
 //
-//staticではないtotalNumメソッドをstaticのmainメソッドから参照することはできないです。
-//
+//static(クラスメソッド)ではないtotalNumメソッドをstaticのmainメソッドから参照することはできないです。
+//クラス全体の処理に関わるエラー。
 //
 //
 //解決方法
 //
-//12行目の「public」の部分を「static」にするか「public」のあとに「static」を
+//12行目の「public」の部分を「static」にするか、「public」のあとに「static」を
 //割り込むことでエラーを解消できる。
 //
