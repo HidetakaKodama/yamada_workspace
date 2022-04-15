@@ -22,6 +22,7 @@ public class MealTicketMain_Ex3B1 {
 				break;
 				} catch (InputMismatchException|NullPointerException e) {
 					System.out.println("有効な整数を入力してください。");
+					System.out.println();
 			}
 		}
 	}
