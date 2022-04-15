@@ -1,7 +1,7 @@
 package e4_15;
 /**
  *
- * @return
+ * 別のクラスでフィールドの値を設定し、インスタンスを作成。フィールドの値を代入し、メッセージメソッドを呼び出す。
  */
 public class Sample7 {
 	public static void main(String[] args) {
