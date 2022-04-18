@@ -12,6 +12,8 @@ public class Sample8 {
 		Human std1 = new Human(1002,"太郎");
 		Human std1 = new Human(1001);
 
+		std1.introduce();
+		std1.introdude();
 	}
 }
 
