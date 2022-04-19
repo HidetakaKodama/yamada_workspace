@@ -16,8 +16,8 @@ public class Sample9 {
 
 
 class Dog {
-	String name;
-	double height;
+	private String name;
+	private double height;
 
 	Dog(String name, double height){
 		this.name = name;
