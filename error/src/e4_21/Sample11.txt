@@ -1,0 +1,59 @@
+
+★問題集2-A5
+
+用意されているACCOUNT_TABLEとPREFECTURE_TABLEとSEX_IDの３つのテーブルを結合する、
+
+
+〇コード
+
+SELECT
+	ACCOUNT_TABLE.ID,
+	ACCOUNT_TABLE.NAME,
+     	SEX_TABLE.SEX_NAME,
+     	ACCOUNT_TABLE.AGE,
+     	PREFECTURE_TABLE.PREFECTURE_NAME
+FROM
+     	ACCOUNT_TABLE
+INNER JOIN
+	PREFECTURE_TABLE,
+    SEX_TABLE
+ON
+     	ACCOUNT_TABLE.PREFECTURE_ID = PREFECTURE_TABLE.ID ,
+        ACCOUNT_TABLE.SEX_ID = SEX_TABLE.ID;
+
+
+
+〇エラーコード
+
+#1064 - SQL構文エラーです。バージョンに対応するマニュアルを参照して正しい構文を確認してください。 : 'ON
+         ACCOUNT_TABLE.PREFECTURE_ID = PREFECTURE_TABLE.ID ,
+        ACCOUN...' 付近 12 行目
+
+
+
+〇エラー内容
+
+12行目付近で構文エラーが発生しています。
+
+
+〇エラー解決方法
+
+12行目(今回は20行目)付近を見てみると、内部結合を記述したコード付近となる。
+「INNER JOIN」の後にテーブル名を2つ入れているのと、「ON」のあとにテーブルのカラムを
+一気に指定しているので、
+
+INNER JOIN
+	PREFECTURE_TABLE
+ON
+     	ACCOUNT_TABLE.PREFECTURE_ID = PREFECTURE_TABLE.ID
+INNER JOIN
+	SEX_TABLE
+ON
+	ACCOUNT_TABLE.SEX_ID = SEX_TABLE.ID;
+
+と別々に記述してあげるとエラーが解消される。
+
+
+
+
+
