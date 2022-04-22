@@ -1,0 +1,57 @@
+
+〇問題
+ 世界の各国の中から日本の都市を抜き出し、人口を昇順に編集して名前と人口を出力する
+
+
+ 〇コード
+
+ SELECT
+	 Name,Population
+ FROM
+	 city
+ WHERE
+	 countryCode = 'JPN'
+ ORDER BY
+ ASC;
+
+
+
+〇エラーコード
+
+  #1064 - SQL構文エラーです。バージョンに対応するマニュアルを参照して正しい構文を確認してください。 : 'Population
+  ASC' 付近 8 行目
+
+
+ 静的解析
+ 1. 認識できないキーワードです。 (near "ORDER" at position 69)
+ 2. 予期しないトークン。 (near "Population" at position 78)
+ 3. 認識できないキーワードです。 (near "ASC" at position 90)
+
+
+
+〇エラー内容
+ 8行目(15行目)の辺りで構文エラーがでています。
+
+
+
+〇解決方法
+ 8行目(15行目)の付近を見てみると人口を昇順に直す「ORDER BY ASC」のコードだとわかる。
+ 「ORDER BY」の後に昇順に指定するカラムの値が抜けているので値を下のように指定してあげると
+
+ ORDER BY
+ 		Population
+ ASC;
+
+ エラーが解消される。
+
+
+
+
+
+
+
+
+
+
+
+
