@@ -1,0 +1,54 @@
+
+〇問題
+
+ 千葉、埼玉、東京、神奈川、大阪以外の県で、県の人口が１５万人以上のデータを県名の降順で表示する
+
+
+
+ 〇記述したコード
+
+ SELECT
+	 District,
+	 SUM(Population)
+ FROM
+	 city
+ WHERE
+	  countryCode = 'JPN'
+ AND
+	 District
+ NOT
+	 'chiba',
+	 'saitama',
+	 'kanagawa',
+	 'tokyo-to',
+	 'osaka'
+ GROUP BY
+	  District
+ HAVING
+	  SUM(Population) >= 150000
+ ORDER BY
+	  District
+ DESC;
+
+
+〇エラーコード
+
+ #1064 - SQL構文エラーです。バージョンに対応するマニュアルを参照して正しい構文を確認してください。 : '('chiba','saitama','kanagawa','tokyo-to','osaka')
+GROUP BY
+     District
+HA...' 付近 11 行目
+
+
+〇エラー内容
+
+ 記述したコードの11行目(19行目)の辺りで構文エラーが出ています。
+
+
+
+〇解決方法
+
+カラムの値を一気に指定するときは「IN」を書いて括弧でくくるとエラーが解消される。
+
+(例)
+   NOT IN
+	      ('chiba','saitama','kanagawa','tokyo-to','osaka')
