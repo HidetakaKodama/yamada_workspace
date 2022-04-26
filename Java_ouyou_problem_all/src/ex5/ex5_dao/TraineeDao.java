@@ -40,7 +40,6 @@ public class TraineeDao {
 
 
 
-
 	public List<Trainee> searchByUnitId(int unit_id){
 		List<Trainee> list = new ArrayList<>();
 		try {
@@ -66,5 +65,21 @@ public class TraineeDao {
 	}
 
 
+	public int insert(Trainee trainee) {
+		int result = -1;
+		try (Connection con = DriverManager.getConnection(url, user, password);
+				PreparedStatement pstmt = con.prepareStatement("INSERT INTO trainee VALUES(?,?,?,?,?,?)")) {
+			pstmt.setInt(1, trainee.getId());
+			pstmt.setString(2, trainee.getName());
+			pstmt.setInt(3, trainee.getAge());
+			pstmt.setString(4, trainee.getSex());
+			pstmt.setInt(5, trainee.getUnitId());
+			pstmt.setInt(6, trainee.getCold());
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 }
 
