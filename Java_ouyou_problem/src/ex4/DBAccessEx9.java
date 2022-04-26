@@ -8,8 +8,8 @@ import java.util.Scanner;
 
 public class DBAccessEx9 {
 	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
 		System.out.println("所在地を変更する会社IDを入力してください -> ");
+		Scanner sc = new Scanner(System.in);
 		int co_id = sc.nextInt();
 		System.out.println("所在地を入力してください -> ");
 		String co_location = sc.next();
