@@ -75,8 +75,43 @@ public class TraineeDao {
 			pstmt.setString(4, trainee.getSex());
 			pstmt.setInt(5, trainee.getUnitId());
 			pstmt.setInt(6, trainee.getCold());
+
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+
+
+	public int updateById(int id, int cold) {
+		int result = -1;
+		try {
+			Connection con = DriverManager.getConnection(url,user,password);
+			PreparedStatement pstmt = con.prepareStatement
+					("UPDATE trainee SET co_id = ? WHERE id = ?");
+			pstmt.setInt(1,cold);
+			pstmt.setInt(2, id);
+
+			result = pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+
+
+	public int deleteById(int id) {
+		int result = -1;
+		try {
+			Connection con = DriverManager.getConnection(url,user,password);
+			PreparedStatement pstmt = con.prepareStatement
+					("DELETE FROM trainee WHERE id = ?");
+			pstmt.setInt(1, id);
+			result = pstmt.executeUpdate();
+		}catch(SQLException e) {
 			e.printStackTrace();
 		}
 		return result;

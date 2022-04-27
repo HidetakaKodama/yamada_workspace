@@ -9,8 +9,8 @@ public class Sample13 {
 
 		int year = cal.get(Calendar.YEAR);
 		int month = cal.get(Calendar.MONTH) + 1;
-		int day = cal.get(Calendar.DAY_OF_MONTH);
-		String weekday = week[cal.get(Calendar.DAY_OF_WEEK)];
+		int day = cal.get(Calendar.MONTH);
+		String weekday = week[cal.get(Calendar.WEEK)];
 		System.out.println("今日は" + year + "年" + month + "月" + day + "日" + weekday + "曜日です。");
 	}
 }
