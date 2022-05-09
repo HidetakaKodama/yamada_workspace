@@ -33,4 +33,12 @@
     <servlet-name>JapaneseServlet</servlet-name>
     <url-pattern>/JapaneseServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>NameServlet</servlet-name>
+    <servlet-class>NameServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NameServlet</servlet-name>
+    <url-pattern>/NameServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

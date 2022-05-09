@@ -25,4 +25,12 @@
     <servlet-name>DateServlet</servlet-name>
     <url-pattern>/DateServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>MultipleServlet</servlet-name>
+    <servlet-class>MultipleServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MultipleServlet</servlet-name>
+    <url-pattern>/MultipleServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
