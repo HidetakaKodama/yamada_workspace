@@ -41,4 +41,12 @@
     <servlet-name>NameServlet</servlet-name>
     <url-pattern>/NameServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>ForwardServlet</servlet-name>
+    <servlet-class>ForwardServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ForwardServlet</servlet-name>
+    <url-pattern>/ForwardServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
