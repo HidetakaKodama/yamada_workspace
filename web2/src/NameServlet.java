@@ -10,7 +10,7 @@ public class NameServlet extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse
 			response) throws ServletException, IOException{
-		request.setCharacterEncoding("UTF-8");
+		//request.setCharacterEncoding("UTF-8");
 		String name = request.getParameter("name");
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
