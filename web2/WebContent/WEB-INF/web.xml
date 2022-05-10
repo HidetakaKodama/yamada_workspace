@@ -49,4 +49,20 @@
     <servlet-name>ForwardServlet</servlet-name>
     <url-pattern>/ForwardServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>SessionSetServlet</servlet-name>
+    <servlet-class>SessionSetServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>InvalidateServlet</servlet-name>
+    <servlet-class>InvalidateServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SessionSetServlet</servlet-name>
+    <url-pattern>/SessionSetServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>InvalidateServlet</servlet-name>
+    <url-pattern>/InvalidateServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
