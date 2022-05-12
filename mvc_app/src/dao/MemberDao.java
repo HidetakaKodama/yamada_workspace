@@ -49,7 +49,6 @@ public class MemberDao{
 	}
 
 	public Member searchById(int id) {
-		// TODO 自動生成されたメソッド・スタブ
 		return null;
 	}
 }
