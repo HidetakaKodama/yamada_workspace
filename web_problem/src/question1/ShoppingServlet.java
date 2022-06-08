@@ -1,3 +1,4 @@
+package question1;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -41,5 +42,4 @@ public class ShoppingServlet extends HttpServlet {
 		out.println("</body>");
 		out.println("</html>");
 	}
-
 }

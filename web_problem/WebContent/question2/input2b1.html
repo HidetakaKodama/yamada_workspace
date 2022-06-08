@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<p>賃料と詳細条件を入力してください。</p><br><br>
+	<p>賃料</p><br>
+	<form action="lease.jsp" method="post">
+		<input type="radio" name="rent" value="～50000円">～50000円<br>
+		<input type="radio" name="rent" value="～70000円">～70000円<br>
+		<input type="radio" name="rent" value="～90000円">～90000円<br>
+		<input type="radio" name="rent" value="90000円～">90000円～<br><br>
+
+	<p>詳細条件</p>
+		<input type="checkbox" name="detail" value="オートロック">オートロック<br>
+		<input type="checkbox" name="detail" value="風呂・トイレ別">風呂・トイレ別<br>
+		<input type="checkbox" name="detail" value="エアコン付き">エアコン付き<br>
+		<input type="checkbox" name="detail" value="2階以上">2階以上<br>
+
+		<input type="submit" value="送信">
+	</form>
+</body>
+</html>
