@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Webアプリ研修|東京23区|ゴミ箱</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/css/tokyoTakehara.css}" />
+</head>
+<body>
+	<div class="container">
+		<div class="page-header">
+			<h4>
+				<a th:href="@{/}" th:text="#{login.text.app}">研修Webアプリ</a>
+				<small th:text="#{login.text.version}">ver β</small>
+			</h4>
+		</div>
+		<div class="sub-header">
+			<h1 align="center" th:text="#{tokyo.text.delete}">DeleteORRestore</h1>
+			<a th:href="@{/tokyotakehara}" th:text="#{common.text.back}">Back</a>
+		</div>
+
+		<!-- 削除対象データ -->
+		<form class="form-horizontal" id="deleteForm"
+			action="/tokyotakehara/deletecomp" th:object="${tokyoTakeharaDeleteForm}" method="post">
+			<div th:if="${wardsList.size() != 0}">
+				<h4 th:text="#{common.text.check.data}"></h4>
+				<h5 th:each="err : ${#fields.errors('operateIds')}"
+					th:text="#{${err}}" class="err alert-danger">error message</h5>
+			</div>
+			<div th:if="${wardsList.size() == 0}">
+				<h3 th:text="#{common.text.nothing.ingarbage}">NotSelected</h3>
+			</div>
+			<div th:if="${wardsList.size() != 0}" class="resultArea">
+				<table id="resultTable"
+					class="table table-borderd table-striped table-hover">
+					<thead>
+						<tr>
+							<th><input type="checkbox" id="allCheck" /></th>
+							<th class="per-12 center" th:text="#{tokyo.text.name}">WardsName</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="ward : ${wardsList}">
+							<td>
+								<label>
+									<input type="checkbox"
+										style="margin-left: 50%" th:field="*{operateIds}"
+										th:value="${ward.id}" />
+								</label>
+							</td>
+							<td class="data center" th:text="${ward.wardName}+'区'">千代田区</td>
+						</tr>
+					</tbody>
+				</table>
+				<table>
+					<tr>
+						<td>
+							<input type="submit" class="btn btn-danger" onclick="$('#deleteForm').submit()" name="deleteComp" th:value="#{common.text.delete}"/>
+						</td>
+						<td>
+							<input type="submit" class="btn btn-success" onclick="$('#deleteForm').submit()" name="restore" th:value="#{common.text.restore}"/>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript"
+		src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+	<script th:src="@{/libs/jquery/jquery.js}"></script>
+	<script th:src="@{/libs/bootstrap/js/bootstrap.js}"></script>
+	<script>
+		$('#allCheck').on('change', function() {
+			$('input[name=deleteIds]').prop('checked', this.checked);
+		});
+	</script>
+</body>
+</html>

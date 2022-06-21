@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>研修Webアプリ|アニメ更新</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/css/spring_training.css}" />
+</head>
+<link rel="stylesheet" type="text/css" th:href="@{/css/animeWatanabe.css}" />
+<body>
+	<div class="container">
+		<div class="page-header">
+			<h4>
+				<a th:href="@{/}" th:text="#{login.text.app}">研修Webアプリ</a>
+				<small th:text="#{login.text.version}">ver γ</small>
+			</h4>
+		</div>
+		<div class="resultArea col-xs-12 col-sm-12 col-md-8 col-md-oddset-2 col-lg-8 col-lg-offset-2">
+			<div class="sub-header">
+				<h1 align="center" th:text="#{anime.text.update}">アニメ更新</h1>
+				<a th:href="@{/animeWatanabe}" th:text="#{common.text.back}">Back</a>
+			</div>
+
+			<!-- 入力欄 -->
+			<form method="post" id="animeInputForm" th:action="@{/animeWatanabe/update }"
+			    th:object="${animeInputForm}" class="form-horizontal">
+
+			    <!-- アニメ名 -->
+				<input type="hidden" th:field="*{id}" />
+				<div class="form-group">
+					<label for="name" class="control-label" th:text="#{anime.text.input.animeTitle.require}">AnimeTitle(*):</label>
+					<input type="text" th:field="*{animeTitle}" class="form-control" th:placeholder="#{anime.text.animeTitle}" />
+					<p class="err alert-danger"
+						th:each="err : ${#fields.errors('animeTitle')}"
+						th:text="#{${err}(#{anime.text.animeTitle})}">
+					</p>
+				</div>
+
+				<!-- アニメ制作会社 -->
+				<div class="form-group">
+					<label for="company" class="control-label" th:text="#{anime.text.input.company}"> Company:</label>
+					<select name="companyId" id="inputCompany" class="form-control select">
+					    <option th:each="company : ${companyWatanabeList}"
+					        th:value="${company.id}" th:text="${company.name}"
+							th:selected="${company.id == animeInputForm.companyId}">pulldown
+						</option>
+					</select>
+				</div>
+
+				<!-- 原作 -->
+				<div class="form-group">
+					<label for="original" class="control-label" th:text="#{anime.text.input.original}"> Original:</label>
+					<select name="originalId" id="inputOriginal" class="form-control select">
+						<option th:each="original : ${originalWatanabeList}"
+							th:value="${original.id}" th:text="${original.original}"
+							th:selected="${original.id == animeInputForm.originalId}">pulldown
+						</option>
+					</select>
+				</div>
+
+				<!-- 公開年 -->
+				<div class="form-group">
+					<label for="releaseYear" class="control-label" th:text="#{anime.text.input.year}">ReleaseYear(*)</label>
+					    <input type="text" th:field="*{releaseYearStr}" class="form-control"
+						    id="inputReleaseYear" th:placeholder="#{anime.text.year}" />
+					<p class="err alert-danger" th:each="err : ${#fields.errors('releaseYearStr')}" th:text="#{${err}(#{anime.text.year})}"></p>
+				</div>
+
+				<!-- 話数 -->
+				<div class="form-group">
+					<label for="episode" class="control-label" th:text="#{anime.text.input.episode}">Episode(*)</label>
+					<input type="text" th:field="*{episodeStr}" class="form-control"
+						id="inputEpisode" th:placeholder="#{anime.text.episode}" />
+					<p class="err alert-danger" th:each="err : ${#fields.errors('episodeStr')}"
+						th:text="#{${err}(#{anime.text.episode})}">
+					</p>
+				</div>
+
+				<!-- 続編 -->
+				<div class="form-group">
+					<label for="sequel" class="control-label" th:text="#{anime.text.input.sequel}"> Sequel:</label>
+					<input type="text" th:field="*{sequel}" class="form-control" id="inputSequel" th:placeholder="#{anime.text.sequel}" />
+					<p class="err alert-danger"
+						th:each="err : ${#fields.errors('sequel')}"
+						th:text="#{${err}(#{anime.text.sequel)}">
+					</p>
+				</div>
+
+				<!-- オープニング主題歌 -->
+				<div class="form-group">
+					<label for="" class="control-label" th:text="#{anime.text.input.op}"> Op:</label>
+					<input type="text" th:field="*{op}" class="form-control" id="inputOp" th:placeholder="#{anime.text.op}" />
+					<p class="err alert-danger" th:each="err : ${#fields.errors('op')}"
+						th:text="#{${err}(#{anime.text.op)}">
+					</p>
+				</div>
+
+				<!-- 更新ボタン -->
+				<div class="col-xs-3 col-sm-2">
+					<a class="btn btn-success btn-block"
+						onclick="$('#animeInputForm').submit()"
+						th:text="#{common.text.update}">Update
+					</a>
+				    <br />
+				</div>
+				<input type="hidden" th:field="*{updateDate}" />
+			</form>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,167 @@
+@CHARSET "UTF-8";
+
+body{
+	background-image: url(/VtuberUmehara/VtuberUmeharaBack.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+div.font{
+	pudding: 10px;
+	margin-bottom: 10px;
+	border: 10px double #008080;
+	border-radius: 20px;
+	background-color: #99CCFF;
+	color: #ffffff;
+}
+
+div.font-color{
+	color:#0066CC;
+}
+
+div.searchclear {
+    position: absolute;
+    right: 5px;
+    top: 0;
+    bottom: 0;
+    height: 14px;
+    margin: auto;
+    font-size: 14px;
+    cursor: pointer;
+    color: #ccc;
+}
+
+@media screen { #filename { display: none; } }
+
+div.browse_btn {
+background-color: #d3d3d3;
+padding: 6px;
+border-radius: 8px;
+font-weight: bold;
+}
+
+div.container {
+	max-width: 95%;
+	width: 95%;
+	margin: auto;
+}
+
+
+div.search-menu {
+	margin-top: 15px;
+}
+
+div.image{
+	width: 300px;
+}
+
+@media ( min-width : 980px) {
+	div.search-menu {
+		height: 100vh;
+	}
+}
+
+div.search-menu .btn-group {
+	margin-top: 30px;
+}
+
+h1, .h1 {
+	font-size: 36px;
+}
+
+#resultTable {
+	margin-top: 20px;
+}
+
+#resultTable .center {
+	text-align: center;
+}
+
+#resultTable td img.image{
+	width: 300px;
+}
+
+#resultTable th.per-12 {
+	width: 12%;
+}
+
+#resultTable th.per-7 {
+	width: 7%;
+}
+
+#resultTable th.per-16 {
+	width: 16%;
+}
+
+#resultTable th.per-30 {
+	width: 30%;
+}
+
+#resultTable th.per-46 {
+	width: 46%;
+}
+
+.btn-group-justified>.btn, .btn-group-justified>.btn-group {
+	width: 32%;
+}
+
+.customUpload .file-upload {
+	display: none;
+}
+
+.customUpload {
+	margin: 10px 0 20px;
+}
+
+.page-header {
+	margin: 0 0 23px;
+	padding: 10px;
+	border-bottom: 1px solid #666;
+	border-color: #e5e5e5;
+}
+
+.page-header>h4 {
+	margin-left: 40px;
+}
+
+.sub-header {
+	margin: auto;
+	width: 90%;
+	font-size: 34px;
+	line-height: 40px;
+}
+
+.sub-header p {
+	font-size: 20px;
+	float: right;
+}
+
+.sub-header a {
+	font-size: 15px;
+	margin: 0 20px;
+	float: right;
+}
+
+.panel-half {
+	width: 48%;
+	float: left;
+	margin: 3px 10px;
+}
+
+.panel-clear {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	padding: 25% 25%;
+	font-size: 50px;
+	background-color: #000;
+	opacity: 0.4;
+	color: #FFF;
+	text-align: center;
+	z-index: 1000;
+	display: none;
+}

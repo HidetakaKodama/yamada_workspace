@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Webアプリ研修|映画更新</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/css/spring_training.css}" />
+</head>
+<link rel="stylesheet" type="text/css" th:href="@{/css/movieSample.css}" />
+<body>
+	<div class="container">
+		<div class="page-header">
+			<h4>
+				<a th:href="@{/}" th:text="#{login.text.app}">研修Webアプリ</a><small th:text="#{login.text.version}">ver β</small>
+			</h4>
+		</div>
+		<div class="resultArea col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2 ">
+			<div class="sub-header">
+				<h1 align="center" th:text="#{movie.text.update}">映画更新</h1>
+				<a th:href="@{/moviesample}" th:text="#{common.text.back}">Back</a>
+			</div>
+
+			<!-- 入力欄 -->
+			<form method="post" id="movieSampleInputForm"
+				th:action="@{/moviesample/update}" th:object="${movieSampleInputForm}"
+				class="form-horizontal">
+				<input type="hidden" th:field="*{id}"/>
+				<div class="form-group">
+					<label for="name" class="control-label"
+						th:text="#{movie.text.input.title.riquire}"> Title(*):</label>
+					<input type="text" th:field="*{movieTitle}" class="form-control"
+						th:placeholder="#{movie.text.title}" />
+					<p class="err alert-danger" th:each="err : ${#fields.errors('movieTitle')}"
+						th:text="#{${err}(#{movie.text.title})}"></p>
+				</div>
+				<div class="form-group">
+					<label for="genre" class="control-label"
+						th:text="#{movie.text.input.genre}">Genre:</label>
+					<select name="genreId" id="inputGenre"
+						class="form-control select">
+						<option th:each="genre : ${genreList}"
+								th:value="${genre.id}"
+								th:text="${genre.genre}"
+								th:selected="${genre.id == movieSampleInputForm.genreId}">pulldown</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="actor" class="control-label"
+						th:text="#{movie.text.input.actor}">Actor:</label>
+					<select name="actorId" id="inputActor"
+						class="form-control">
+						<option th:each="actor : ${movieActorList}"
+								th:value="${actor.id}"
+								th:text="${actor.name}"
+								th:selected="${actor.id == movieSampleInputForm.actorId}">pulldown</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="releaseYear" class="control-label"
+						th:text="#{movie.text.input.releaseyear}">ReleaseYear(*):</label>
+					<input type="text" th:field="*{releaseYearStr}" class="form-control" id="inputReleaseYear"
+						th:placeholder="#{movie.text.releaseyear}"/>
+					<p class="err alert-danger" th:each="err : ${#fields.errors('releaseYearStr')}"
+						th:text="#{${err}(#{movie.text.releaseyear})}"></p>
+				</div>
+				<div class="form-group">
+					<label for="runTime" class="control-label"
+						th:text="#{movie.text.input.runtime}"> RunTime:</label>
+					<input type="text" th:field="*{runTimeStr}" class="form-control" id="inputRunTime"
+						th:placeholder="#{movie.text.runtime}" />
+					<p class="err alert-danger" th:each="err : ${#fields.errors('runTimeStr')}"
+						th:text="#{${err}(#{movie.text.runtime})}"></p>
+				</div>
+				<div class="form-group">
+					<label for="comment" class="control-label"
+						th:text="#{movie.text.input.comment}"> Comment:</label>
+					<textarea th:field="*{comment}" cols="" rows="5"
+						class="form-control" id="inputComment"
+						th:placeholder="#{movie.text.comment}"></textarea>
+				</div>
+				<div class="col-xs-3 col-sm-2">
+					<a class="btn btn-success center-block"
+						onclick="$('#movieSampleInputForm').submit()"
+						th:text="#{common.text.update}">Update</a>
+				</div>
+				<input type="hidden" th:field="*{updateDate}" />
+			</form>
+		</div>
+	</div>
+</body>
+</html>

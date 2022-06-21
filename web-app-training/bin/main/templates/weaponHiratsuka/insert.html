@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Webアプリ研修|武器データ追加</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/css/spring_training.css}" />
+</head>
+<link rel="stylesheet" type="text/css" th:href="@{/css/weaponHiratsuka.css}" />
+<body>
+	<div class="container">
+		<div class="page-header">
+			<h4>
+				<a th:href="@{/}" th:text="#{login.text.app}">研修Webアプリ</a>
+				<small th:text="#{login.text.version}">ver β</small>
+			</h4>
+		</div>
+		<div class="resultArea col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2 ">
+			<div class="sub-header">
+				<h1 align="center" th:text="#{Weapon1.text.insert}">WeaponInsert</h1>
+				<a th:href="@{/weaponHiratsuka}" th:text="#{common.text.back}">Back</a>
+			</div>
+
+			<!-- 入力欄 -->
+			<form method="post" id="weaponHiratsukaInputForm"
+				th:action="@{/weaponHiratsuka/insert}"
+				th:object="${weaponHiratsukaInputForm}" class="form-horizontal">
+
+				<!-- 武器名 -->
+				<div class="form-group">
+					<label for="name" class="control-label"
+						th:text="#{Weapon1.text.input.name.riquire}"> Name(*):
+					</label>
+					<input type="text" th:field="*{weaponname}" class="form-control" th:placeholder="#{Weapon1.text.name}" />
+					<p class="err alert-danger"
+						th:each="err : ${#fields.errors('weaponname')}"
+						th:text="#{${err}(#{Weapon1.text.name})}">
+					</p>
+				</div>
+
+				<!-- 武器タイプ -->
+				<div class="form-group">
+					<label for="weapontype" class="control-label"
+						th:text="#{Weapon1.text.input.weapontype.riquire}">weapontype(*):
+					</label>
+					<select name="weapontypeId" id="inputWeapontype" class="form-control select">
+						<option th:each="weapontype : ${weapontypeHiratsukaList}"
+							th:value="${weapontype.id}" th:text="${weapontype.weapontype}"
+							th:selected="${weapontype.id == weaponHiratsukaInputForm.weapontypeId}">pulldown
+						</option>
+					</select>
+					<p class="err alert-danger"
+						th:each="err : ${#fields.errors('weapontypeId')}"
+						th:text="#{${err}(#{Weapon1.text.weapontype})}">
+					</p>
+				</div>
+
+				<!-- 射撃方式 -->
+				<div class="form-group">
+					<label for="shottype" class="control-label"
+						th:text="#{Weapon1.text.input.shottype.riquire}">Shottype(*):
+					</label>
+					<select name="shottypeId" id="inputShottype" class="form-control">
+						<option th:each="shottype : ${shottypeHiratsukaList}"
+							th:value="${shottype.id}" th:text="${shottype.shottype}"
+							th:selected="${shottype.id == weaponHiratsukaInputForm.shottypeId}">pulldown
+						</option>
+					</select>
+					<p class="err alert-danger"
+						th:each="err : ${#fields.errors('shottypeId')}"
+						th:text="#{${err}(#{Weapon1.text.shottype})}">
+					</p>
+				</div>
+
+				<!-- コスト -->
+				<div class="form-group">
+					<label for="cost" class="control-label"
+						th:text="#{Weapon1.text.input.cost.riquire}"> Cost(*)):
+					</label>
+					<input type="text" th:field="*{costStr}" class="form-control"
+						id="inputCost" th:placeholder="#{Weapon1.text.cost}" />
+					<p class="err alert-danger"
+						th:each="err : ${#fields.errors('costStr')}"
+						th:text="#{${err}(#{Weapon1.text.error.cost})}">
+					</p>
+				</div>
+
+				<!-- 頭ダメージ -->
+				<div class="form-group">
+					<label for="headdamage" class="control-label"
+						th:text="#{Weapon1.text.input.headdamage}"> Headdamage:
+					</label>
+						<input type="text" th:field="*{headdamageStr}" class="form-control"
+						id="inputHeaddamage" th:placeholder="#{Weapon1.text.headdamage}" />
+					<p class="err alert-danger"
+						th:each="err : ${#fields.errors('headdamageStr')}"
+						th:text="#{${err}(#{Weapon1.text.headdamage})}">
+					</p>
+				</div>
+
+				<!-- 胴ダメージ -->
+				<div class="form-group">
+					<label for="bodydamage" class="control-label"
+						th:text="#{Weapon1.text.input.bodydamage}"> Bodydamage:
+					</label>
+					<input
+						type="text" th:field="*{bodydamageStr}" class="form-control"
+						id="inputBodydamage" th:placeholder="#{Weapon1.text.bodydamage}" />
+					<p class="err alert-danger"
+						th:each="err : ${#fields.errors('bodydamageStr')}"
+						th:text="#{${err}(#{Weapon1.text.bodydamage})}">
+					</p>
+				</div>
+
+				<!-- 脚部ダメージ -->
+				<div class="form-group">
+					<label for="legdamage" class="control-label"
+						th:text="#{Weapon1.text.input.legdamage}"> Legdamage:
+					</label>
+					<input
+						type="text" th:field="*{legdamageStr}" class="form-control"
+						id="inputLegdamage" th:placeholder="#{Weapon1.text.legdamage}" />
+					<p class="err alert-danger"
+						th:each="err : ${#fields.errors('legdamageStr')}"
+						th:text="#{${err}(#{Weapon1.text.legdamage})}">
+					</p>
+				</div>
+
+				<!-- 連射速度 -->
+				<div class="form-group">
+					<label for="rate" class="control-label"
+						th:text="#{Weapon1.text.input.rate}"> Rate:
+					</label>
+					<input type="text" th:field="*{rateStr}" class="form-control"
+						id="inputRate" th:placeholder="#{Weapon1.text.rate}" />
+					<p class="err alert-danger"
+						th:each="err : ${#fields.errors('rateStr')}"
+						th:text="#{${err}(#{Weapon1.text.rate})}">
+					</p>
+				</div>
+
+				<div class="col-xs-3 col-sm-2">
+					<a class="btn btn-success center-block"
+						onclick="$('#weaponHiratsukaInputForm').submit()"
+						th:text="#{common.text.insert}">Insert
+					</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
+
+

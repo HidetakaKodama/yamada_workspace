@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Webアプリ研修 | ペンギン完全削除</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/css/spring_training.css}" />
+</head>
+<link rel="stylesheet" type="text/css" th:href="@{/css/penguinKawamura.css}" />
+<body>
+	<div class="container">
+		<div class="page-header">
+			<h4>
+				<a class="btn btn-info"
+						th:href="@{/}" th:text="#{login.text.app}">研修Webアプリ</a>
+					<font color="#5D99FF" th:text="#{login.text.version}">ver β</font>
+			</h4>
+		</div>
+		<div class="sub-header">
+			<div class="font-color">
+				<a class="btn btn-info center-block" href="/penguinKawamura">Back</a><br /><br />
+			</div>
+			<div class="font">
+				<h1 align="center" th:text="#{penguin.text.delete}">PenguinDelete</h1>
+			</div>
+		</div>
+
+		<!-- 削除対象データ -->
+		<form class="form-horizontal" id="deleteForm" action="/penguinKawamura/deletecomp"
+			th:object="${penguinDeleteForm}" method="post">
+			<div th:if="${penguinMainKawamuraList != null}">
+				<h3 th:text="#{common.text.info.delete.confirm}">選択したデータを完全に削除します</h3>
+				<h4 th:each="err:${#fields.errors('deleteIds')}" th:text="#{${err}}"
+					class="err alert-danger">error message</h4>
+			</div>
+			<div th:if="${penguinMainKawamuraList == null}">
+				<h3 th:text="#{common.text.info.no.delete}">削除するデータがありません</h3>
+			</div>
+			<div th:if="${penguinMainKawamuraList != null}" class="resultArea col-xs-18 col-sm-12 col-md-10 col-md-offset-2 col-lg-8 col-lg-offset-2 ">
+				<table id="resultTable" class="table table-borderd table-striped table-hover">
+					<thead>
+						<tr class="success">
+							<th><input type="checkbox" id="allCheck" /></th>
+							<th class="per-12 center" th:text="#{penguin.text.image}">Image</th>
+							<th class="per-30 center" th:text="#{penguin.text.name}">Name</th>
+							<th class="per-12 center" th:text="#{penguin.text.attributeName}">AttributeName</th>
+							<th class="per-30 center" th:text="#{penguin.text.comment}">comment</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="active" th:each="penguin : ${penguinMainKawamuraList}">
+							<td>
+								<label>
+									<input type="checkbox" style="marin-left:50%"
+									th:field="*{deleteIds}" th:value="${penguin.id}"/>
+								</label>
+							</td>
+							<td class="data center"><img th:src="@{${penguin.image}}"></img></td>
+							<td class="data center" th:text="${penguin.name}">コウテイペンギン</td>
+							<td class="data center">
+								<label th:if="${penguin.attributeKawamura != null}" th:text="${penguin.attributeKawamura.attributeName}" class="data center">
+								エンペラーペンギン属</label>
+							</td>
+							<td class="data center" th:text="${penguin.comment}">南極大陸周辺の定着氷上に生息　体の大きさNo.1（日本の水族館で見る事が出来る）
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div>
+					<a class="btn btn-danger center-block"
+						onclick="$('#deleteForm').submit()"
+						th:text="#{common.text.delete}">Delete</a>
+				</div>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript"  src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+	<script th:src="@{/libs/jquery/jquery.js}"></script>
+	<script th:src="@{/libs/bootstrap/js/bootstrap.js}"></script>
+	<script>
+		$('#allCheck').on('change', function(){
+			$('input[name=deleteIds]').prop('checked', this.checked);
+		});
+	</script>
+</body>
+</html>

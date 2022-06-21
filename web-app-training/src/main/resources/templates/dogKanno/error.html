@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Webアプリ研修｜登録失敗</title>
+<link rel="stylesheet" type="text/css"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/spring_training.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/movieSample.css}" />
+</head>
+<body>
+	<div class="page-header">
+		<h4>
+			<a th:href="@{/}" th:text="#{login.text.app}">研修Webアプリ</a><small
+				th:text="#{login.text.version}">ver β</small>
+		</h4>
+	</div>
+	<div class="sub-header">
+		<a th:href="@{/menu}" th:text="#{common.text.back}">Back</a><br />
+		<h1 align="center" th:text="#{error.emotion}"></h1>
+		<h3 align="center" th:text="画像は必ず登録してください"></h3>
+	</div>
+
+	<!-- 登録画面に戻る -->
+	<div class="col-xs-3 col-sm-2">
+		<a class="btn btn-success center-block"
+			th:href="@{/dogKanno/insert}"
+			th:text="#{dog.text.return}">Return</a>
+	</div>
+
+</body>
+</html>

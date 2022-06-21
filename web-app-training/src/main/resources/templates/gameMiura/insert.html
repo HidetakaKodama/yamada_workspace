@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Webアプリ研修|ゲーム追加</title>
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/spring_training.css}" />
+</head>
+<link rel="stylesheet" type="text/css" th:href="@{/css/gameMiura.css}" />
+<body>
+	<div class="container">
+		<div class="page-header">
+			<h4>
+				<a th:href="@{/}" th:text="#{login.text.app}">研修Webアプリ</a> <small
+					th:text="#{login.text.version}">ver β</small>
+			</h4>
+		</div>
+		<div
+			class="resultArea col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2 ">
+			<div class="sub-header">
+				<h1 align="center" th:text="#{game.text.insert}">GameInsert</h1>
+				<a th:href="@{/gameMiura}" th:text="#{common.text.back}">Back</a>
+			</div>
+
+			<!-- 入力欄 -->
+			<form method="post" id="gameMiuraInputForm"
+				th:action="@{/gameMiura/insert}" th:object="${gameMiuraInputForm}"
+				class="form-horizontal">
+				<div class="form-group">
+					<label for="name" class="control-label"
+						th:text="#{game.text.input.title.require}"> Title(必須):</label> <input
+						type="text" th:field="*{gameTitle}" class="form-control"
+						th:placeholder="#{game.text.title}" />
+					<p class="err alert-danger"
+						th:each="err : ${#fields.errors('gameTitle')}"
+						th:text="#{${err}(#{game.text.title})}"></p>
+				</div>
+				<div class="form-group">
+					<label for="genre" class="control-label"
+						th:text="#{game.text.input.genre}"> Genre:</label>
+						<select name="genreId" id="inputGenre" class="form-control select">
+						<option th:each="genre : ${gameGenreMiuraList}"
+							th:value="${genre.id}" th:text="${genre.genre}"
+							th:selected="${genre.id == gameMiuraInputForm.genreId}">pulldown</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="hard" class="control-label"
+						th:text="#{game.text.input.hard}"> Hard:</label>
+						<select name="hardId" id="inputHard" class="form-control">
+						<option th:each="hard : ${gameHardMiuraList}"
+							th:value="${hard.id}" th:text="${hard.hard}"
+							th:selected="${hard.id == gameMiuraInputForm.hardId}">pulldown</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="releaseYear" class="control-label"
+						th:text="#{game.text.input.releaseyear}">
+						ReleaseYear(必須):</label>
+						<input type="text" th:field="*{releaseYearStr}"
+						class="form-control" id="inputReleaseYear"
+						th:placeholder="#{game.text.releaseyear}" />
+					<p class="err alert-danger"
+						th:each="err : ${#fields.errors('releaseYearStr')}"
+						th:text="#{${err}(#{game.text.releaseyear})}"></p>
+
+
+
+				</div>
+
+				<div class="form-group">
+					<label for="comment" class="control-label"
+						th:text="#{game.text.input.comment}"> Comment:</label>
+					<textarea th:field="*{comment}" cols="" rows="5"
+						class="form-control" id="inputComment"
+						th:placeholder="#{game.text.comment}"></textarea>
+				</div>
+				<div class="col-xs-3 col-sm-2">
+					<a class="btn btn-success center-block"
+						onclick="$('#gameMiuraInputForm').submit()"
+						th:text="#{common.text.insert}">Insert</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

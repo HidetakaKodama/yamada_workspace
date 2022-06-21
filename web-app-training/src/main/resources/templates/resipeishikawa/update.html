@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Webアプリ研修|献立更新</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/css/spring_training.css}" />
+</head>
+<link rel="stylesheet" type="text/css" th:href="@{/css/resipeIshikawa.css}" />
+<body>
+	<div class="container">
+		<div class="page-hedder">
+			<h4>
+				<a th:href="@{/}" th:text="#{login.text.app}">研修Webアプリ</a><small th:text="#{login.text.version}">ver γ</small>
+			</h4>
+		</div>
+		<div class="resultArea col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+			<div class="sub-hedder">
+				<h1 align="center" th:text="#{resipe.text.update}">献立更新</h1>
+				<a th:href="@{/resipeIshikawa}" th:text="#{common.text.back}">Back</a>
+			</div>
+
+			<!-- a入力欄 -->
+			<form method="post" id="resipeIshikawaInputForm"
+				th:action="@{/resipeIshikawa/update}" th:object="${resipeIshikawaInputForm}"
+				class="horizontal">
+				<input type="hidden" th:field="*{id}"/>
+				<div class="form-group">
+					<label for="name" class="control-label"
+						th:text="#{resipe.text.input.title.riquire}">Title(*):</label>
+					<input type="text" th:field="*{resipeTitle}" class="form-control"
+						th:placeholder="#{resipe.text.title}"/>
+					<p class="err alert-danger" th:each="err : ${#fields.errors('resipeTitle')}"
+						th:text="#{${err}(#{resipe.text.title})}"></p>
+				</div>
+				<div class="form-group">
+					<label for="name" class="control-label"
+						th:text="#{resipe.text.input.title2.riquire}">Title2(*):</label>
+					<input type="text" th:field="*{resipeTitle2}" class="form-control"
+						th:placeholder="#{resipe.text.title2}"/>
+					<p class="err alert-danger" th:each="err : ${#fields.errors('resipeTitle2')}"
+						th:text="#{${err}(#{resipe.text.title2})}"></p>
+				</div>
+				<div class="form-group">
+					<label for="vegetable" class="control-label"
+						th:text="#{resipe.text.input.vegetable1}">Vegetable:</label>
+					<select name="vegetableId1" id="inputVegetable"
+						class="form-control select">
+						<option th:each="vegetable : ${vegetableIshikawaList}"
+								th:value="${vegetable.id}"
+								th:text="${vegetable.vegetable}"
+								th:selected="${vegetable.id == resipeIshikawaInputForm.vegetableId1}">pulldown</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="vegetable" class="control-label"
+						th:text="#{resipe.text.input.vegetable2}">Vegetable:</label>
+					<select name="vegetableId2" id="inputVegetable"
+						class="form-control select">
+						<option th:each="vegetable : ${vegetableIshikawaList}"
+								th:value="${vegetable.id}"
+								th:text="${vegetable.vegetable}"
+								th:selected="${vegetable.id == resipeIshikawaInputForm.vegetableId2}">pulldown</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="genre" class="control-label"
+						th:text="#{resipe.text.input.genre}">Genre:</label>
+					<select name="genreId" id="inputGenre"
+						class="form-control select">
+						<option th:each="genre : ${genreIshikawaList}"
+								th:value="${genre.id}"
+								th:text="${genre.genre}"
+								th:selected="${genre.id == resipeIshikawaInputForm.genreId}">pulldown</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="cookTime" class="control-label"
+						th:text="#{resipe.text.input.cooktime}">CookTime:</label>
+					<input type="text" th:field="*{cookTimeStr}" class="form-control" id="inputCookTime"
+						th:placeholder="#{resipe.text.cooktime}"/>
+					<p class="err alert-danger" th:each="err : ${#fields.errors('cookTimeStr')}"
+						th:text="#{${err}(#{resipe.text.cookTime})}"></p>
+				</div>
+				<div class="col-xs-3 col-sm-2">
+					<a class="btn btn-success center-block"
+						onclick="$('#resipeIshikawaInputForm').submit()"
+						th:text="#{common.text.update}">Update</a>
+				</div>
+				<input type="hidden" th:field="*{updateDate}" />
+			</form>
+		</div>
+	</div>
+</body>
+</html>

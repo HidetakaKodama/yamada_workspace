@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:object="${music}">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="*{title}">Music Title</title>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/libs/bootstrap/css/bootstrap.css}"/>
+    <link rel="stylesheet" th:href="@{/css/spring_training.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/libs/bootstrap-star-rating/css/star-rating.css}"/>
+</head>
+<body>
+<div class="container">
+
+    <!-- ヘッダー -->
+    <div class="page-header">
+        <h1>
+            <span th:text="*{title}">Music Title</span>
+            <small th:text="*{author}">Music Author</small>
+        </h1>
+        <input class="rating-loading" id="rating"
+               data-size="xs"
+               th:value="*{rating}"/>
+    </div>
+    <!-- ヘッダー -->
+
+    <!-- ディティール -->
+    <section id="detailSection">
+
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-offset-1">
+                    <div>
+                        <label class="col-sm-2" th:text="#{music.text.search.category}">Category</label>
+                        <p class="col-sm-3" th:text="(*{category.category} == '') ? 'No Type' : *{category.category}">Category</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-1">
+                    <label class="col-sm-2" th:text="#{music.text.search.comment}">Comment</label>
+                    <div class="col-sm-8">
+                        <div class="panel panel-default">
+                            <div class="panel-body" th:text="(*{comment} == '') ? #{music.text.detail.comment} : (*{comment})">
+                                Basic panel example,Basic panel example,Basic panel example
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" th:if="*{videoURL != null and videoURL != ''}">
+                <div class="col-sm-offset-1">
+                    <label class="col-sm-2">Video</label>
+                    <div class="col-sm-8">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <iframe class="embed-responsive-item" th:src="*{videoURL}"
+                                    allowfullscreen=""></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-1">
+                    <a class="btn btn-danger center-block" id="btnBack"
+                       onclick="history.back();"
+                       th:text="#{music.text.search.back}">Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ディティール -->
+</div>
+<script th:src="@{/libs/jquery/jquery.js}"></script>
+<script th:src="@{/libs/bootstrap/js/bootstrap.js}"></script>
+<script th:src="@{/libs/bootstrap-star-rating/js/star-rating.js}"></script>
+<script>
+    $(function () {
+        $('#rating').rating({displayOnly: true});
+    });
+</script>
+</body>
+</html>

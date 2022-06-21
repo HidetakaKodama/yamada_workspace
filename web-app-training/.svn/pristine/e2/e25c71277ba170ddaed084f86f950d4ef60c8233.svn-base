@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>WEBアプリ研修｜飲み物完全削除</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/css/spring_training.css}" />
+</head>
+<link rel="stylesheet" type="text/css" th:href="@{/css/drinkYoshimoto.css}" />
+<body>
+	<canvas id="canvas"></canvas>
+	<section id="body">
+		<div class="page-header">
+			<h4>
+				<a th:href="@{/}" th:text="#{login.text.app}">研修Webアプリ</a>
+				<small th:text="#{login.text.version}">ver β</small>
+			</h4>
+		</div>
+		<div class="sub-header">
+			<a th:href="@{/drinkYoshimoto}" th:text="#{common.text.back}">Back</a><br />
+			<h1 align="center" th:text="#{drink.text.delete}">DrinkDelete</h1>
+		</div>
+		<div class="container">
+
+			<!-- 削除対象データ -->
+			<form class="form-horizontal" id="deleteForm" action="/drinkYoshimoto/deletecomp"
+				th:object="${drinkYoshimotoDeleteForm}" method="post">
+				<div th:if="${drinkMainYoshimotoList != null}">
+					<h3 th:text="#{common.text.info.delete.confirm}">選択したデータを完全に削除します</h3>
+					<h4 th:each="err : ${#fields.errors('deleteIds')}" th:text="#{${err}}"
+						class="err alert-danger">error message
+					</h4>
+				</div>
+				<div th:if="${drinkMainYoshimotoList == null}">
+					<h3 th:text="#{common.text.info.no.delete}">削除するデータがありません</h3>
+				</div>
+				<div th:if="${drinkMainYoshimotoList != null}" class="resultArea col-sm-12 col-md-10 col-md-offset-2 clo-lg-8 col-lg-offset-2">
+					<table id="resultTable" class="table table-bordred table-striped table-hover">
+						<thead>
+							<tr class="success">
+								<th><input type="checkbox" id="allCheck" /></th>
+								<th class="per-19 center" th:text="#{drink.text.name}">Name</th>
+								<th class="per-12 center" th:text="#{drink.text.maker}">Maker</th>
+								<th class="per-17 center" th:text="#{drink.text.category}">Category</th>
+								<th class="per-12 center" th:text="#{drink.text.image}">Image</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="active" th:each="drink : ${drinkMainYoshimotoList}">
+								<td>
+									<label>
+										<input type="checkbox" style="margin-left: 50%;" th:field="*{deleteIds}"
+											th:value="${drink.drinkId}" />
+									</label>
+								</td>
+								<td class="data center">
+									<label th:text="${drink.drinkName}">コカ・コーラ ゼロ</label>
+								</td>
+								<td class="data center">
+									<label th:if="${drink.makerId != null}" th:text="${drink.drinkMakerYoshimoto.makerName}" class="data center">コカ・コーラ</label>
+								</td>
+								<td class="data center">
+									<label th:if="${drink.categoryId != null}" th:text="${drink.drinkCategoryYoshimoto.categoryName}" class="data center">炭酸飲料</label>
+								</td>
+								<!-- 画像 -->
+								<td th:if="${drink.image==null or drink.image.equals('')}" class="data center"><img src="/DrinkImageYoshimoto/Noimage.jpg" height="180" width="180" /></td>
+								<td th:if="${drink.image!=null and !(drink.image.equals(''))}" class="data center"><img th:src="@{${drink.image}}" height="180" width="180" /></td>
+							</tr>
+						</tbody>
+					</table>
+					<div>
+						<a class="btn-flat-dashed-filled bg-hover-red" style="width: 80%; margin-bottom: 10px;"
+							onclick="$('#deleteForm').submit()"
+							th:text="#{common.text.delete}">Delete
+						</a>
+					</div>
+				</div>
+			</form>
+		</div><!-- end container -->
+	</section>
+
+	<!-- javascript読み込み -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+	<script th:src="@{/libs/jquery/jquery.js}"></script>
+	<script th:src="@{/libs/bootstrap/js/bootstrap.js}"></script>
+	<script th:src="@{/libs/drinkYoshimoto.js}"></script>
+	<script>
+		$('#allCheck').on('change',function(){
+			$('input[name=deleteIds]').prop('checked',this.checked);
+		});
+	</script>
+
+	<!-- フェードイン -->
+	<script>
+		$(function(){
+			$('#body').hide().fadeIn('slow');
+		});
+	</script>
+</body>
+</html>

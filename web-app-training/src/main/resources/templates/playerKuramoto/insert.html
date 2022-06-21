@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Webアプリ研修|選手追加</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<link rel="stylesheet" type="text/css"	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/css/spring_training.css}" />
+</head>
+<link rel="stylesheet" type="text/css" th:href="@{/css/playerKuramoto.css}" />
+<body>
+	<div class="container">
+		<div class="page-header">
+			<h4>
+				<a th:href="@{/}" th:text="#{login.text.app}">研修Webアプリ</a><small
+					th:text="#{login.text.version}">ver β</small>
+			</h4>
+		</div>
+		<div
+			class="resultArea col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2 ">
+			<div class="sub-header">
+				<a th:href="@{/playerKuramoto}" th:text="#{common.text.back}">Back</a><br></br>
+				<h1 align="center" th:text="選手登録">PlayerInsert</h1>
+			</div>
+
+			<!-- 入力欄 -->
+			<form method="post" id="playerKuramotoInputForm"
+				th:action="@{/playerKuramoto/insert}"
+				th:object="${playerKuramotoInputForm}" class="form-horizontal">
+				<div class="form-group">
+					<label for="name" class="control-label" th:text="選手名（必須）：">PlayerName(*):</label>
+						<input type="text" th:field="*{PlayerName}" class="form-control" />
+					<p class="err alert-danger" th:each="err : ${#fields.errors('PlayerName')}"></p>
+				</div>
+				<div class="form-group">
+					<label for="position" class="control-label" th:text="ポジション名（必須）：">Position(*):</label>
+						 <select name="positionId" id="inputPosition" class="form-control select">
+						<option th:each="position : ${playerPositionKuramotoList}"
+							th:value="${position.id}" th:text="${position.positionName}"
+							th:selected="${position.id == playerKuramotoInputForm.positionId}">pulldown</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="bt" class="control-label" th:text="投打（必須）：">Bt(*):</label>
+					 <select name="btId" id="inputBt" class="form-control">
+						<option th:each="bt : ${playerBtKuramotoList}" th:value="${bt.id}"
+							th:text="${bt.btInfo}"
+							th:selected="${bt.id == playerKuramotoInputForm.btId}">pulldown</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="playerAge" class="control-label" th:text="年齢（半角数字で入力してください）：">PlayerAge:</label>
+					 <input type="text" th:field="*{playerAgeStr}" class="form-control" id="inputPlayerAge" />
+					<p class="err alert-danger"
+						th:each="err : ${#fields.errors('playerAgeStr')}"
+						th:text="#{${err}(#{player.text.playerAgeStr})}"></p>
+				</div>
+				<div class="form-group">
+					<label for="playerYears" class="control-label" th:text="プロ在籍年数（半角数字で入力してください）：">PlayerYears:</label>
+					 <input type="text" th:field="*{playerYearsStr}" class="form-control" id="inputPlayerYears" />
+					<p class="err alert-danger"
+						th:each="err : ${#fields.errors('playerYearsStr')}"
+						th:text="#{${err}(#{player.text.playerYearsStr})}"></p>
+				</div>
+				<div class="form-group">
+					<label for="playerPlace" class="control-label" th:text="出身地：">PlayerPlace:</label>
+					 <input type="text" th:field="*{PlayerPlace}"	class="form-control" />
+					<p class="err alert-danger" th:each="err : ${#fields.errors('PlayerPlace')}"></p>
+				</div>
+				<div class="col-xs-3 col-sm-2" style="width:100%">
+					<a class="btn btn-success center-block"
+						onclick="$('#playerKuramotoInputForm').submit()"
+						th:text="#{common.text.insert}">Insert</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

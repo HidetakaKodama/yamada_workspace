@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Webアプリ研修|献立検索</title>
+<link rel="stylesheet" type="text/css"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/spring_training.css}" />
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/resipeIshikawa.css}" />
+</head>
+<body>
+	<div class="page-header">
+		<h4>
+			<a th:href="@{/}" th:text="#{login.text.app}">研修Webアプリ</a><small
+				th:text="#{login.text.version}">ver γ</small>
+		</h4>
+	</div>
+	<div class="sub-header">
+		<a th:href="@{/menu}" th:text="#{common.text.back}">Back</a><br />
+		<h1 align="center" th:text="#{resipe.text.search}">ResipeSearch</h1>
+	</div>
+
+	<!-- 新規・削除ボタン -->
+	<div style="position: relative; left: 30px">
+		<form class="form-horizontal" id="deleteCompForm"
+			method="get" action="/resipeIshikawa/deletecomp"
+			th:object="${resipeIshikawaSearchForm}">
+			<div class="form-group">
+				<div class="col-sm-8">
+					<input type="hidden" name="isDelete" th:value="1"  />
+				</div>
+			</div>
+		</form>
+		<div class="form-group">
+			<div class="" >
+				<a class="btn btn-warning"
+					th:href="@{/resipeIshikawa/insert}"
+					th:text="#{common.text.new}" >New
+				</a>
+				<a class="btn btn-danger"
+					onclick="$('#deleteCompForm').submit()"
+					th:text="#{common.text.unnecessary}">UnnecessaryData
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+
+		<!-- aメッセージ -->
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-7">
+
+				<!-- a検索結果なし -->
+				<div class="alert alert-info text-center" role="alert"
+					th:if="${(resipeIshikawaSearchForm.resipeTitle != null or
+							resipeIshikawaSearchForm.vegetableId1 != null or
+							resipeIshikawaSearchForm.vegetableId2 != null or
+							resipeIshikawaSearchForm.genreId != null) and
+							resipeIshikawaList == null}"
+					th:text="#{common.text.info.search}">No Result
+				</div>
+
+				<!-- DB操作後 -->
+				<div class="alert alert-info text-center" role="alert"
+					th:if="${param.result != null}">
+					<div th:switch="${param.result[0]}">
+						<p th:case="insert"
+							th:text="#{common.text.info.insert} + ':ID=' + ${param.id[0]}"></p>
+						<p th:case="update"
+							th:text="#{common.text.info.update} + ':ID=' + ${param.id[0]}"></p>
+						<p th:case="updatefailed"
+							th:text="#{common.text.info.update.failed}"></p>
+						<p th:case="delete"
+							th:text="#{common.text.info.delete} + ':ID=' + ${param.id[0]}"></p>
+						<p th:case="deletecomp" th:text="#{common.text.info.deletecomp}"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- a検索条件 -->
+	<form class="form-horizontal" id="searchForm" method="post"
+		action="/resipeIshikawa/search"
+		th:object="${resipeIshikawaSearchForm}">
+		<div class="form-group">
+			<label for="resipeTitle" class="col-sm-2 control-label"
+				th:text="#{resipe.text.input.title}">登録名： </label>
+			<div class="col-sm-8">
+				<input type="text" th:field="*{resipeTitle}" class="form-control"
+					id="inputResipeTitle" th:placeholder="#{resipe.text.search.info}" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="vegetable" class="control-label col-sm-2"
+				th:text="#{resipe.text.input.vegetable1}">Vegetable1: </label>
+			<div class="col-sm-8">
+				<select id="inputVegetableId1" name="vegetableId1"
+					class="form-control select">
+					<option th:each="vegetable : ${vegetableIshikawaList}"
+						th:value="${vegetable.id}" th:text="${vegetable.vegetable}"
+						th:selected="${vegetable.id == resipeIshikawaSearchForm.vegetableId1}">pulldown</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="vegetable" class="control-label col-sm-2"
+				th:text="#{resipe.text.input.vegetable2}">Vegetable2: </label>
+			<div class="col-sm-8">
+				<select id="inputVegetableId2" name="vegetableId2"
+					class="form-control select">
+					<option th:each="vegetable : ${vegetableIshikawaList}"
+						th:value="${vegetable.id}" th:text="${vegetable.vegetable}"
+						th:selected="${vegetable.id == resipeIshikawaSearchForm.vegetableId2}">pulldown</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="genre" class="control-label col-sm-2"
+				th:text="#{resipe.text.input.genre}">Genre:</label>
+			<div class="col-sm-8">
+				<select id="inputGenre" name="genreId" class="form-control select">
+					<option th:each="genre : ${genreIshikawaList}"
+						th:value="${genre.id}" th:text="${genre.genre}"
+						th:selected="${genre.id == resipeIshikawaSearchForm.genreId}">pulldown</option>
+				</select>
+			</div>
+		</div>
+		</form>
+		<div class="form-group">
+			<div class="col-sm-offset-4 col-xs-3 col-sm-2">
+				<a class="btn btn-primary center-block"
+					onclick="$('#searchForm').submit()" th:text="#{common.text.search}">Search</a>
+			</div>
+			<div class="col-xs-3 col-sm-2">
+				<a class="btn btn-warning center-block" th:href="@{/resipeIshikawa}"
+					th:text="#{common.text.reset}">Reset </a>
+			</div>
+		</div>
+
+		<!-- a検索結果の表示 -->
+		<section id="resultArea" th:if="${resipeIshikawaList != null}">
+			<table id="resultTable"
+				class="table table-borderd table-striped table-hover">
+				<thead>
+					<tr>
+						<th class="per-12 center" th:text="#{resipe.text.title}">Title</th>
+						<th class="per-12 center" th:text="#{resipe.text.vegetable1}">vegetable1</th>
+						<th class="per-12 center" th:text="#{resipe.text.vegetable2}">vegetable2</th>
+						<th class="per-12 center" th:text="#{resipe.text.genre}">genre</th>
+						<th class="per-12 center" th:text="#{resipe.text.cooktime}">cooktime</th>
+						<th class="per-7 center" th:text="#{common.text.update}">Update</th>
+						<th class="per-7 center" th:text="#{common.text.delete}">Delete</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="resipe : ${resipeIshikawaList}">
+						<td class="data center" th:text="${resipe.resipeTitle}"></td>
+						<td class="data center"><label
+							th:if="${resipe.vegetable1 != null}"
+							th:text="${resipe.vegetable1.vegetable}" class="data center">
+						</label></td>
+						<td class="data center">
+						<label
+							th:if="${resipe.vegetable2 != null}"
+							th:text="${resipe.vegetable2.vegetable}" class="data center">
+						</label>
+						</td>
+						<td class="data center">
+						<label th:if="${resipe.genre != null}" th:text="${resipe.genre.genre}"
+							class="data center">
+						</label>
+						</td>
+						<td class="data center">
+						<label th:if="${resipe.cookTime != null}" th:text="${resipe.cookTime}"
+							class="data center">
+						</label>
+						</td>
+							<td class="data">
+							<a class="btn btn-success"
+								th:href="@{/resipeIshikawa/update(id=${resipe.id})}"
+                       			th:text="#{common.text.update}">Update</a></td>
+						<td class="data center">
+							<a class="btn btn-danger" style="margin-left: 5%"
+								data-toggle="modal" data-target="#deleteModal"
+								th:text="#{common.text.delete}"
+								th:attr="data-id=${resipe.id}, data-title=${resipe.resipeTitle}">Delete</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+
+		<!-- aページング用 -->
+		<div th:fragment='paginationbar'>
+			<p th:if="${page != null}">
+			<ul>
+				<li th:class="${page.first} ? 'disabled':''" style="display: inline">
+					<span th:if="${page.first}" th:text="#{common.text.paging.lead}">←lead</span>
+					<a th:if="${not page.first}" onclick="$('#pageForm0').submit()"
+					th:text="#{common.text.paging.lead}">←lead</a>
+				</li>
+				<li th:each='i : ${#numbers.sequence(0, page.totalPages-1)}' th:class="(${i}==${page.number})? 'active' : ''" style="display: inline">
+					<form th:id="'pageForm'+${i}" method="post" th:action="@{${url}(page=${i})}"
+						th:object="${resipeIshikawaSearchForm}" style="display:inline" >
+						<input type="hidden" th:field="*{resipeTitle}" />
+						<input type="hidden" th:field="*{vegetableId1}" />
+						<input type="hidden" th:field="*{vegetableId2}" />
+						<input type="hidden" th:field="*{genreId}" />
+					</form>
+					<span th:if='${i}==${page.number}' th:text='${i+1}'>1</span>
+					<a th:if='${i}!=${page.number}'
+					th:onclick="'$(\'#pageForm'+${i}+'\').submit()'">
+					<span th:text='${i+1}'>1</span>
+					</a>
+				</li>
+				<li th:class="${page.Last} ? 'disabled':''" style="display: inline">
+					<span th:if="${page.Last}" th:text="#{common.text.paging.end}">end→</span>
+					<a th:if="${not page.Last}"
+					th:onclick="'$(\'#pageForm'+(${page.totalPages}-1)+'\').submit()'"
+					th:text="#{common.text.paging.end}">end→</a>
+				</li>
+			</ul>
+			</p>
+		</div>
+	<div id="bogoCount" class="panel-clear"></div>
+	<script type="text/javascript"
+		src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+	<script th:src="@{/libs/jquery/jquery.js}"></script>
+	<script th:src="@{/libs/bootstrap/js/bootstrap.js}"></script>
+
+<!-- 削除モーダル -->
+	<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+		<div class="modal-dialog" role="document">
+			<form class="form-horizontal" id="deleteForm" th:method="get" th:action="@{delete}">
+				<div class="modal-content">
+					<input type="hidden" id="deleteId" name="id"/>
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="deleteModalLabel"
+							th:text="#{resipe.text.delete}">ResipeDelete</h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-sm-12">
+								<p class="lead">
+									<span id="deleteTitle">Resipe Title</span>
+								</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="alert alert-danger" role="alert">
+									<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+									<span th:text="#{common.text.warn.delete(#{menu.text.resipe})}"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<a class="btn btn-default"
+							th:text="#{common.text.cansel}"
+							data-dismiss="modal">Cancel
+						</a> <a class="btn btn-danger" onclick="$('#deleteForm').submit()"
+							th:text="#{common.text.delete}">Delete </a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div id="bogoCount" class="panel-clear"></div>
+	<script type="text/javascript"  src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+	<script th:src="@{/libs/jquery/jquery.js}"></script>
+	<script th:src="@{/libs/bootstrap/js/bootstrap.js}"></script>
+
+	<!-- 削除モーダル用スクリプト -->
+	<script>
+		$('#deleteModal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget);
+			var resipeId = button.data('id');
+			var resipeTitle = button.data('title');
+			var modal = $(this);
+			modal.find('#deleteId').attr("value", resipeId);
+			modal.find('#deleteTitle').text(resipeTitle);
+		});
+	</script>
+</body>
+</html>

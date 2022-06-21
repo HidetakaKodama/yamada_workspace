@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Webアプリ研修|東京23区|検索</title>
+
+<link rel="stylesheet" type="text/css"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/tokyoTakehara.css}" />
+</head>
+<body>
+	<div class="page-header">
+		<h4>
+			<a th:href="@{/}" th:text="#{login.text.app}">研修Webアプリ</a>
+			<small th:text="#{login.text.version}">ver γ</small>
+		</h4>
+	</div>
+	<div class="sub-header">
+		<a th:href="@{/menu}" th:text="#{common.text.back}">Back</a>
+		<h1 align="center" th:text="#{tokyo.text.search}">TokyoWardsSearch</h1>
+	</div>
+
+	<!-- 新規・削除ボタン -->
+	<div style="position: relative; left: 30px">
+		<form class="form-horizontal" id="deleteCompForm" method="get"
+			action="/tokyotakehara/deletecomp"
+			th:object="${tokyoTakeharaSearchForm}">
+			<div class="form-group">
+				<div class="col-sm-8">
+					<input type="hidden" name="isDelete" th:value="1" />
+				</div>
+			</div>
+		</form>
+		<div class="form-group">
+			<div class="">
+				<a class="btn btn-warning" th:href="@{/tokyotakehara/insert}"
+					th:text="#{common.text.new}">New
+				</a>
+				<a class="btn btn-danger"
+					onclick="$('#deleteCompForm').submit()"
+					th:text="#{common.text.garbage}">UnnecessaryData
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+
+		<!-- メッセージ -->
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-7">
+
+				<!-- 検索結果なし -->
+				<div class="alert alert-info text-center" role="alert"
+					th:if="${(tokyoTakeharaSearchForm.wardName != null) and
+							wardsList == null}"
+					th:text="#{common.text.info.search}">No Result
+				</div>
+
+				<!-- DB操作後 -->
+				<div class="alert alert-info text-center" role="alert"
+					th:if="${param.result != null}">
+					<div th:switch="${param.result[0]}">
+						<p th:case="insert"
+							th:text="#{common.text.info.insert} + '：' + ${wardName}"></p>
+						<p th:case="update"
+							th:text="#{common.text.info.update} + '：' + ${wardName}"></p>
+						<p th:case="updatefailed"
+							th:text="#{common.text.info.update.failed}"></p>
+						<p th:case="delete"
+							th:text="#{common.text.info.garbage} + '：' + ${wardName}"></p>
+						<p th:case="deletecomp" th:text="#{common.text.info.deletecomp}"></p>
+						<p th:case="restore" th:text="#{common.text.info.restore}"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 検索条件 -->
+		<form class="form-horizontal" id="searchForm" method="post"
+			action="/tokyotakehara/search" th:object="${tokyoTakeharaSearchForm}">
+			<table align="center" width="600px">
+				<tr>
+					<td align="justify" width="70px">
+						<label for="tokyoTakehara"
+							th:text="#{tokyo.text.name}">WardName
+						</label>
+					</td>
+					<td>：</td>
+					<td>
+						<div>
+							<input type="text" th:field="*{wardName}" class="form-control"
+								id="inputWardName" th:placeholder="#{tokyo.text.search.info}" />
+						</div>
+					</td>
+					<td> </td>
+				</tr>
+				<tr>
+					<td align="justify" width="70px">
+						<label for="locationName"
+							th:text="#{tokyo.text.location}">Location
+						</label>
+					</td>
+					<td>：</td>
+					<td>
+						<div>
+							<select id="inputLocation" name="locationId"
+								class="form-control select">
+								<option th:each="location : ${locationTakeharaList}"
+									th:value="${location.locationId}"
+									th:text="${location.locationName}"
+									th:selected="${location.locationId == tokyoTakeharaSearchForm.locationId}">pulldown
+								</option>
+							</select>
+						</div>
+					</td>
+					<td> </td>
+				</tr>
+				<tr>
+					<td align="justify" width="70px">
+						<label for="population"
+							th:text="#{tokyo.text.population}">Population
+						</label>
+					</td>
+					<td>：</td>
+					<td>
+						<div>
+							<select id="inputPopulation" name="population"
+								class="form-control select" width="100%">
+								<option th:value="0" th:selected="${0 == tokyoTakeharaSearchForm.population}"
+									th:text="#{tokyo.text.search.population.zero}">
+								</option>
+								<option th:value="50000" th:selected="${50000 == tokyoTakeharaSearchForm.population}"
+									th:text="#{tokyo.text.search.population.fiftythousand}">
+								</option>
+								<option th:value="100000" th:selected="${100000 == tokyoTakeharaSearchForm.population}"
+									th:text="#{tokyo.text.search.population.hundredthousand}">
+								</option>
+								<option th:value="200000" th:selected="${200000 == tokyoTakeharaSearchForm.population}"
+									th:text="#{tokyo.text.search.population.twohundredthousand}">
+								</option>
+								<option th:value="500000" th:selected="${500000 == tokyoTakeharaSearchForm.population}"
+									th:text="#{tokyo.text.search.population.fivehundredthousand}">
+								</option>
+							</select>
+						</div>
+					</td>
+					<td>人以上</td>
+				</tr>
+			</table>
+			<p>
+				<div class="col-sm-offset-4 col-xs-3 col-sm-2">
+					<a class="btn btn-primary center-block"
+						onclick="$('#searchForm').submit()"
+						th:text="#{common.text.search}">Search
+					</a>
+				</div>
+				<div class="col-xs-3 col-sm-2">
+					<a class="btn btn-warning center-block" th:href="@{/tokyotakehara}"
+						th:text="#{common.text.reset}">Reset
+					</a>
+				</div>
+			</p>
+		</form>
+
+		<!-- 検索結果の表示 -->
+		<section id="resultArea" th:if="${wardsList != null}">
+			<table id="resultTable"
+				class="table table-borderd table-striped table-hover">
+				<thead>
+					<tr>
+						<th class="per-12 center" th:text="#{tokyo.text.name}">WardsName</th>
+						<th class="per-12 center" th:text="#{tokyo.text.symbol}">WardsSymbol</th>
+						<th class="per-12 center" th:text="#{tokyo.text.location}">Location</th>
+						<th class="per-16 center" th:text="#{tokyo.text.population}">Population</th>
+						<th class="per-16 center" th:text="#{tokyo.text.area}">Area</th>
+						<th class="per-16 center" th:text="#{tokyo.text.office}">WardsOffice</th>
+						<th class="per-12 center" th:text="#{tokyo.text.income}">AvaerageAnnualIncome</th>
+						<th class="per-16 center" th:text="#{tokyo.text.landprice}">OfficialLandPrice</th>
+						<th class="per-16 center" th:text="#{tokyo.text.performer}">Performer</th>
+						<th class="per-7 center" th:text="#{common.text.update}">Update</th>
+						<th class="per-7 center" th:text="#{common.text.delete}">Delete</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="ward : ${wardsList}">
+						<td class="data center" th:text="${ward.wardName}+'区'">千代田区</td>
+						<td class="data center">
+							<img th:if="${ward.symbol != null}" th:src="@{${ward.symbol}}" width="60px" height="60px"></img>
+						</td>
+						<td class="data center"
+							th:text="${ward.locationTakehara.locationName}">分類無し
+						</td>
+						<td class="data center" th:if="${ward.population != null}"
+							th:text="${#numbers.formatInteger(ward.population, 3, 'COMMA')}">64533
+						</td>
+						<td class="data center" th:if="${ward.area != null}"
+							th:text="${#numbers.formatDecimal(ward.area, 2, 2, 'POINT')}">11.66
+						</td>
+						<td class="data center" th:if="${ward.wardOffice != null}"
+							th:text="${ward.wardOffice}+'駅'">九段下
+						</td>
+						<td class="data center" th:if="${ward.averageAnnualIncome != null}"
+							th:text="${ward.averageAnnualIncome}">784
+						</td>
+						<td class="data center" th:if="${ward.officialLandPrice != null}"
+							th:text="${#numbers.formatInteger(ward.officialLandPrice, 3, 'COMMA')}">633072
+						</td>
+						<td class="data center" th:if="${ward.performer != null}" th:text="${ward.performer}">樹木希林
+						</td>
+						<td class="data">
+							<a class="btn btn-success"
+								th:href="@{/tokyotakehara/update(id=${ward.id})}"
+								th:text="#{common.text.update}">Update
+							</a>
+						</td>
+						<td class="data">
+							<a class="btn btn-danger"
+								style="margin-left: 5%" data-toggle="modal"
+								data-target="#deleteModal" th:text="#{common.text.garbage}"
+								th:attr="data-id=${ward.id}, data-name=${ward.wardName}">Delete
+								<!-- date-○○…○○の変数名で=から先のものを扱うことができる。ここでは下のモーダル用スクリプトで使用されている -->
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+
+		<!-- ページング用 -->
+		<div th:fragment='paginationbar'>
+			<p th:if="${page != null}">
+				<ul>
+					<li th:class="${page.first} ? 'disabled':''" style="display: inline">
+						<span th:if="${page.first}" th:text="#{common.text.paging.lead}">←lead</span>
+						<a th:if="${not page.first}" onclick="$('#pageForm0').submit()"
+						th:text="#{common.text.paging.lead}">←lead
+						</a>
+					</li>
+					<li th:each='i : ${#numbers.sequence(0, page.totalPages-1)}'
+						th:class="(${i}==${page.number})? 'active' : ''"
+						style="display: inline">
+						<form th:id="'pageForm'+${i}" method="post"
+							th:action="@{${url}(page=${i})}"
+							th:object="${tokyoTakeharaSearchForm}" style="display: inline">
+							<input type="hidden" th:field="*{wardName}" />
+							<input type="hidden" th:field="*{locationId}" />
+							<input type="hidden" th:field="*{population}"/>
+							<!-- ページング部品はhiddenで検索条件を持っている -->
+						</form>
+						<span th:if='${i}==${page.number}' th:text='${i+1}'>1</span>
+						<a th:if='${i}!=${page.number}'
+						th:onclick="'$(\'#pageForm'+${i}+'\').submit()'">
+							<span th:text='${i+1}'>1</span>
+						</a>
+					</li>
+					<li th:class="${page.last} ? 'disabled':''" style="display: inline">
+						<span th:if="${page.last}" th:text="#{common.text.paging.end}">end➝</span>
+						<a th:if="${not page.last}"
+						th:onclick="'$(\'#pageForm'+(${page.totalPages}-1)+'\').submit()'"
+						th:text="#{common.text.paging.end}">end➝
+						</a>
+					</li>
+				</ul>
+			</p>
+		</div>
+	</div>
+
+	<!-- 削除モーダル -->
+	<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+		aria-labelledby="deleteModalLabel">
+		<div class="modal-dialog" role="document">
+			<form class="form-horizontal" id="deleteForm" th:method="get"
+				th:action="@{delete}">
+				<div class="modal-content">
+					<input type="hidden" id="deleteId" name="id" />
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="deleteModalLabel"
+							th:text="#{tokyo.text.delete}">WardsDelete
+						</h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-sm-12">
+								<p class="lead">
+									<span id="deleteName">WardName</span>
+								</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="alert alert-danger" role="alert">
+									<span class="glyphicon glyphicon-exclamation-sign"
+										aria-hidden="true">
+									</span>
+									<span th:text="#{common.text.warn.delete(#{tokyo.text.ward})}"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<a class="btn btn-default" th:text="#{common.text.cansel}"
+							data-dismiss="modal">Cancel
+						</a>
+						<a class="btn btn-danger"
+							onclick="$('#deleteForm').submit()"
+							th:text="#{common.text.delete}">Delete
+						</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div id="bogoCount" class="panel-clear"></div>
+
+	<script type="text/javascript"
+		src="https://code.jquery.com/jquery-2.2.3.min.js">
+	</script>
+	<script th:src="@{/libs/jquery/jquery.js}"></script>
+	<script th:src="@{/libs/bootstrap/js/bootstrap.js}"></script>
+	<!-- 削除モーダル用スクリプト -->
+	<script>
+		$('#deleteModal').on('show.bs.modal', function(event) {
+			var button = $(event.relatedTarget);
+			var wardId = button.data('id');
+			var wardName = button.data('name')+'区';
+			var modal = $(this);
+			modal.find('#deleteId').attr("value", wardId);
+			//attr(アトリビュート)はタグの中に入れるものを指定する。ここでは削除モーダルにあるid=deleteId(#はidを意味する。.ならクラスを意味する)にwardId(wardslistからdata-idを経て)を渡している
+			modal.find('#deleteName').text(wardName);
+			//textは実際に表示される文字の部分を指定する。
+		});
+	</script>
+</body>
+</html>

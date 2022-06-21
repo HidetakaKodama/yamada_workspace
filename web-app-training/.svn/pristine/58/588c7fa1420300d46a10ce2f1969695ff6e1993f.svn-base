@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Webアプリ研修|自転車追加</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/css/spring_training.css}" />
+</head>
+<link rel="stylesheet" type="text/css" th:href="@{/css/triathlonMori.css}" />
+<body>
+	<div class="container">
+		<div class="page-header">
+			<h4>
+				<a th:href="@{/}" th:text="#{login.text.app}">研修Webアプリ</a><small th:text="#{login.text.version}">ver β</small>
+			</h4>
+		</div>
+		<div class="resultArea col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2 ">
+			<div class="sub-header">
+				<h1 align="center" th:text="#{triathlon.text.insert}">TriathlonInsert</h1>
+				<a th:href="@{/triathlonMori}" th:text="#{common.text.back}">Back</a>
+			</div>
+
+			<!-- 入力欄 -->
+			<form method="post" id="triathlonMoriInputForm"
+				th:action="@{/triathlonMori/insert}" th:object="${triathlonMoriInputForm}"
+				class="form-horizontal" enctype="multipart/form-data">
+				<div class="form-group">
+					<label for="name" class="control-label"
+						th:text="#{triathlon.text.input.name.riquire}"> Name(*):</label>
+					<input type="text" th:field="*{name}" class="form-control"
+						th:placeholder="#{triathlon.text.name}"/>
+					<p class="err alert-danger" th:each="err : ${#fields.errors('name')}"
+						th:text="#{${err}(#{triathlon.text.name})}"></p>
+				</div>
+
+				<div class="form-group">
+					<label for="type" class="control-label"
+						th:text="#{triathlon.text.input.type}"> Type:</label>
+					<select name="typeId" id="inputType"
+						class="form-control select">
+						<option th:each="type : ${typeMoriList}"
+								th:value="${type.id}"
+								th:text="${type.type}"
+								th:selected="${type.id == triathlonMoriInputForm.typeId}">pulldown</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="maker" class="control-label"
+						th:text="#{triathlon.text.input.maker}"> Maker:</label>
+					<select name="makerId" id="inputMaker"
+						class="form-control">
+						<option th:each="maker : ${makerMoriList}"
+								th:value="${maker.id}"
+								th:text="${maker.maker}"
+								th:selected="${maker.id == triathlonMoriInputForm.makerId}">pulldown</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="price" class="control-label"
+						th:text="#{triathlon.text.input.price.riquire}"> Price(*):</label>
+					<input type="text" th:field="*{price}" class="form-control" id="inputPrice"
+						th:placeholder="#{triathlon.text.input.pricePlaceholder}"/>
+					<p class="err alert-danger" th:each="err : ${#fields.errors('price')}"
+						th:text="#{${err}(#{triathlon.text.price})}"></p>
+				</div>
+
+				<div class="form-group">
+					<div>
+						<label for="image" class="control-label"
+							th:text="#{triathlon.text.input.image}">Image:</label>
+						<input type="file" id="file" th:field="*{image}" class="form-control"
+							th:placeholder="#{triathlon.text.image}" />
+					</div>
+				</div>
+
+				<div class="col-xs-3 col-sm-2">
+                    <a class="btn btn-success center-block"
+                       onclick="$('#triathlonMoriInputForm').submit()"
+                       th:text="#{common.text.insert}">Insert</a>
+                </div>
+			</form>
+		</div>
+	</div>
+</body>
+<!-- Photoスクリプト -->
+<script>
+	var obj = document.getElementById("file");
+
+	obj.addEventListener("change", function(evt) {
+		var file = evt.target.files;
+
+		if (file[0].size > 1000000) {
+
+			alert("サイズが大きすぎます。1MG以下のものを選択してください。");
+			document.getElementById('file').value = "";
+		}
+	}, false);
+</script>
+</html>

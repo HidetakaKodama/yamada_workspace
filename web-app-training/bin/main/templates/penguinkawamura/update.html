@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- <meta http-equiv="Content-Script-Type" content="text/javascript"> -->
+<title>Webアプリ研修|ペンギン更新</title>
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/spring_training.css}" />
+</head>
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/penguinKawamura.css}" />
+<body>
+	<div class="container">
+		<div class="page-header">
+			<h4>
+				<a class="btn btn-info" th:href="@{/}" th:text="#{login.text.app}">研修Webアプリ</a>
+				<font color="#5D99FF" th:text="#{login.text.version}">ver β</font>
+			</h4>
+		</div>
+		<div
+			class="resultArea col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2 ">
+			<div class="sub-header">
+				<div class="font-color">
+					<a class="btn btn-info center-block" href="/penguinKawamura">Back</a><br />
+					<br />
+				</div>
+				<div class="font">
+					<h1 align="center">ペンギン更新</h1>
+				</div>
+			</div>
+
+			<!-- 入力欄 -->
+			<form method="post" id="penguinInputForm"
+				th:action="@{/penguinKawamura/update}"
+				th:object="${penguinInputForm}" class="form-horizontal"
+				enctype="multipart/form-data">
+				<input type="hidden" th:field="*{id}"/>
+
+				<div class="form-group">
+					<div>
+						<label for="filename" class="control-label"
+							th:text="#{penguin.text.input.image}">Image:
+							<span class="browse_btn">Browse</span></label>
+							<input type="file" id="file" th:field="*{image}"
+							class="form-control" th:placeholder="変更したい画像を選択してください" />
+							<b><span th:text="#{penguin.text.input.image.attention}">
+							※画像を変更しない場合は「ファイルを選択」ボタンを押さないでください。
+							</span></b><br />
+
+					</div>
+					<div th:if="${imagePass!=null}">
+					<div class="btn btn-danger"
+						data-toggle="modal" data-target="#imageDeleteModal"
+						>現在登録している画像を削除する</div><br />
+					</div>
+					<input type="hidden" id="imageDelFlg" value="0" th:field="*{imageDelFlg}" class="form-control" />
+
+				</div>
+				<div class="form-group">
+					<label for="name" class="control-label"
+						th:text="#{penguin.text.input.name.require}">Name(*):</label>
+						<input type="text" th:field="*{name}" class="form-control"
+						th:placeholder="#{penguin.text.name}" />
+					<p class="err alert-danger" th:each="err:${#fields.errors('name')}"
+						th:text="#{${err}(#{penguin.text.name})}"></p>
+				</div>
+				<div class="form-group">
+					<label for="attribute" class="control-label"
+						th:text="#{penguin.text.input.attributeName}">AttributeName:</label>
+					<select name="attributeId" id="inputAttributeName"
+						class="form-control select">
+						<option th:each="attribute:${attributeKawamuraList}"
+							th:value="${attribute.attributeId}"
+							th:text="${attribute.attributeName}"
+							th:selected="${attribute.attributeId == penguinInputForm.attributeId}">pulldown</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="Comment" class="control-label"
+						th:text="#{penguin.text.input.comment}">Comment:</label> <input
+						type="text" th:field="*{comment}" class="form-control"
+						th:placeholder="#{penguin.text.comment}" />
+					<p class="err alert-danger"
+						th:each="err:${#fields.errors('comment')}"
+						th:text="#{${err}(#penguin.text.comment)}"></p>
+				</div>
+				<div class="col-xs-3 col-sm-2">
+					<a class="btn btn-success center-block"
+						onclick="$('#penguinInputForm').submit()"
+						th:text="#{common.text.update}">Update</a>
+				</div>
+				<input type="hidden" th:field="*{updateDate}" />
+			</form>
+		</div>
+	</div>
+
+	<!-- 画像削除モーダル -->
+	<div class="modal" id="imageDeleteModal" tabindex="-1" role="dialog"
+		aria-labelledby="deleteModalLabel">
+		<div class="modal-dialog  modal-dialog-centered" role="document">
+			<form class="form-horizontal" id="inputForm" th:method="post"
+				th:action="@{update}" >
+				<div class="modal-content">
+					<input type="hidden" id="imageId" name="id" />
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-sm-12">
+								<p class="lead">
+								<img th:src="@{${imagePass}}"></img><br />
+								</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="alert alert-danger" role="alert">
+									<span class="glyphicon glyphicon-exclamation-sign"
+										aria-hidden="true"></span>
+									<span th:text="#{common.text.warn.delete(#{menu.text.image})}"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<a class="btn btn-default" th:text="#{common.text.cansel}"
+							data-dismiss="modal">Cancel </a>
+						<!-- <a class="btn btn-danger" onclick="imageDelete()" th:text="#{common.text.delete}">Delete </a> -->
+						<button type="button" class="btn btn-danger" id="deleteImgBtn" th:text="#{common.text.delete}">Delete </button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div id="bogoCount" class="panel-clear"></div>
+
+	<script type="text/javascript"
+		src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+	<script th:src="@{/libs/jquery/jquery.js}"></script>
+	<script th:src="@{/libs/bootstrap/js/bootstrap.js}"></script>
+
+
+	<!-- 画像サイズ警告用スクリプト -->
+	<script>
+			var obj = document.getElementById("file");
+
+			obj.addEventListener("change",function (evt){
+				var file = evt.target.files;
+
+				if(file[0].size > 1000000){
+
+					alert("サイズが大きすぎます。1MG以下のものを選択してください。");
+					document.getElementById('file').value="";
+				}
+			},false);
+	</script>
+
+	<!-- 削除モーダル用スクリプト -->
+	<script>
+		$('#imageDeleteModal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget);
+			var id = button.data('id');
+			var name = button.data('title');
+			var image = document.createElement( 'img' );
+			var modal = $(this);
+			modal.find('#imageId').attr("value", id);
+
+		});
+
+	</script>
+
+	<!--フラグ書き換えスクリプト -->
+	<!--削除ボタンが押されたら動くメソッド -->
+	<!-- id = "imgDelFlg"の要素のvalueを1に書き換える -->
+	<script>
+		$("#deleteImgBtn").on('click', function() {
+
+			$('#imageDeleteModal').modal('hide');
+			const imageDelFlg = document.getElementById("imageDelFlg");
+			const value1 = imageDelFlg.value;
+
+			if (value1 == "0"){
+				imageDelFlg.value = "1";
+			}
+			//$('#imageDeleteModal').modal('hide');
+		});
+	</script>
+
+	<script>
+
+	//$('#imageDeleteModal').modal('hide');
+	</script>
+
+
+
+</body>
+</html>

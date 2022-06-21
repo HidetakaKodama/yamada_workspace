@@ -1,0 +1,342 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Webアプリ研修|FPS武器検索</title>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/spring_training.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/weaponHiratsuka.css}" />
+</head>
+<body>
+	<div class="page-header">
+		<h4>
+			<a th:href="@{/}" th:text="#{login.text.app}">研修Webアプリ</a>
+			<small th:text="#{login.text.version}">ver β</small>
+		</h4>
+	</div>
+	<div class="sub-header">
+		<a th:href="@{/menu}" th:text="#{common.text.back}">Back</a><br />
+		<h1 align="center" th:text="#{Weapon1.text.search}">WeaponSearch</h1>
+	</div>
+
+	<!-- 新規・削除ボタン -->
+	<div style="position: relative; left: 30px">
+		<form class="form-horizontal" id="deleteCompForm" method="get"
+			action="/weaponHiratsuka/deletecomp"
+			th:object="${WeaponHiratsukaSearchForm}">
+			<div class="form-group">
+				<div class="col-sm-8">
+					<input type="hidden" name="isDelete" th:value="1" />
+				</div>
+			</div>
+		</form>
+		<div class="form-group">
+			<div class="">
+				<a class="btn btn-warning" th:href="@{/weaponHiratsuka/insert}"
+					th:text="#{common.text.new}">New </a>
+				<a class="btn btn-danger"
+					onclick="$('#deleteCompForm').submit()"
+					th:text="#{common.text.unnecessary}">UnnecessaryData </a>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<!-- メッセージ -->
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-7">
+
+				<!-- 検索結果なし -->
+				<div class="alert alert-info text-center" role="alert"
+					th:if="${(weaponHiratsukaSearchForm.weaponname != null or
+							weaponHiratsukaSearchForm.weapontypeId != null or
+							weaponHiratsukaSearchForm.shottypeId != null) and
+							weaponList == null}"
+					th:text="#{common.text.info.search}">No Result
+				</div>
+
+				<!-- DB操作後 -->
+				<div class="alert alert-info text-center" role="alert"
+					th:if="${param.result != null}">
+					<div th:switch="${param.result[0]}">
+						<p th:case="insert" th:text="#{common.text.info.insert} + ':ID=' + ${param.id[0]}"></p>
+						<p th:case="update" th:text="#{common.text.info.update} + ':ID=' + ${param.id[0]}"></p>
+						<p th:case="updatefailed" th:text="#{common.text.info.update.failed}"></p>
+						<p th:case="delete" th:text="#{common.text.info.delete} + ':ID=' + ${param.id[0]}"></p>
+						<p th:case="deletecomp" th:text="#{common.text.info.deletecomp}"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 検索条件 -->
+		<!-- 武器名検索 -->
+		<form class="form-horizontal" id="searchForm" method="post"
+			action="/weaponHiratsuka/search"
+			th:object="${weaponHiratsukaSearchForm}">
+
+			<div class="form-group">
+				<label for="weaponname" class="col-sm-2 control-label" th:text="#{Weapon1.text.input.name}">name:</label>
+				<div class="col-sm-8">
+					<input type="text" th:field="*{weaponname}" class="form-control"
+						id="inputWeaponname" th:placeholder="#{Weapon1.text.search.info}"/>
+				</div>
+			</div>
+
+			<!-- 武器タイプ検索 -->
+			<div class="form-group">
+				<label for="weapontype" class="control-label col-sm-2" th:text="#{Weapon1.text.input.weapontype}">Weapontype:</label>
+				<div class="col-sm-8">
+					<select id="inputWeapontype" name="weapontypeId" class="form-control select">
+						<option th:each="weapontype : ${weapontypeHiratsukaList}"
+							th:value="${weapontype.id}" th:text="${weapontype.weapontype}"
+							th:selected="${weapontype.id == weaponHiratsukaSearchForm.weapontypeId}">pulldown
+						</option>
+					</select>
+				</div>
+			</div>
+
+			<!-- 射撃方式検索 -->
+			<div class="form-group">
+				<label for="shottype" class="control-label col-sm-2" th:text="#{Weapon1.text.input.shottype}">Shottype:</label>
+				<div class="col-sm-8">
+					<select id="inputShottype" name="shottypeId" class="form-control select">
+						<option th:each="shottype : ${shottypeHiratsukaList}"
+							th:value="${shottype.id}" th:text="${shottype.shottype}"
+							th:selected="${shottype.id == weaponHiratsukaSearchForm.shottypeId}">pulldown
+						</option>
+					</select>
+				</div>
+			</div>
+
+			<div>
+				<!-- コスト検索 -->
+				<!-- 選択した数値以下のコストを持つ全データを表示し、0で全てを表示
+				carepackage選択時はコスト0のみ表示-->
+				<div class="form-group">
+					<label for="cost" class="control-label col-sm-2" th:text="#{Weapon1.text.input.cost}">Cost:</label>
+					<div class="col-sm-8">
+						<select id="inputCost" name="cost" class="form-control select">
+							<option th:value="0"
+								th:selected="${0 == weaponHiratsukaSearchForm.cost}"
+								th:text="#{Weapon1.text.search.cost.zero}">
+							</option>
+							<option th:value="1"
+								th:selected="${1 == weaponHiratsukaSearchForm.cost}"
+								th:text="#{Weapon1.text.search.cost.carepackage}">
+							</option>
+							<option th:value="100"
+								th:selected="${100 == weaponHiratsukaSearchForm.cost}"
+								th:text="#{Weapon1.text.search.cost.underonehundred}">
+							</option>
+							<option th:value="200"
+								th:selected="${200 == weaponHiratsukaSearchForm.cost}"
+								th:text="#{Weapon1.text.search.cost.undertwohundred}">
+							</option>
+							<option th:value="300"
+								th:selected="${300 == weaponHiratsukaSearchForm.cost}"
+								th:text="#{Weapon1.text.search.cost.underthreehundred}">
+							</option>
+							<option th:value="400"
+								th:selected="${400 == weaponHiratsukaSearchForm.cost}"
+								th:text="#{Weapon1.text.search.cost.underfourhundred}">
+							</option>
+							<option th:value="500"
+								th:selected="${500 == weaponHiratsukaSearchForm.cost}"
+								th:text="#{Weapon1.text.search.cost.underfivehundred}">
+							</option>
+							<option th:value="600"
+								th:selected="${600 == weaponHiratsukaSearchForm.cost}"
+								th:text="#{Weapon1.text.search.cost.undersixhundred}">
+							</option>
+						</select>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-4 col-xs-3 col-sm-2">
+					<a class="btn btn-primary center-block"
+						onclick="$('#searchForm').submit()"
+						th:text="#{common.text.search}">Search
+					</a>
+				</div>
+				<div class="col-xs-3 col-sm-2">
+					<a class="btn btn-warning center-block"
+						th:href="@{/weaponHiratsuka}" th:text="#{common.text.reset}">Reset
+					</a>
+				</div>
+			</div>
+		</form>
+
+		<!-- 検索結果の表示 -->
+		<section id="resultArea" th:if="${weaponList != null}">
+			<table id="resultTable" class="table table-borderd table-striped table-hover">
+				<thead>
+					<tr>
+						<th class="per-12 center" th:text="#{Weapon1.text.name}">name</th>
+						<th class="per-12 center" th:text="#{Weapon1.text.weapontype}">Weapontype</th>
+						<th class="per-12 center" th:text="#{Weapon1.text.cost}">Cost</th>
+						<th class="per-16 center"
+							th:text="#{Weapon1.text.headdamage.and.bodydamage.and.legdamage}">Headdamage/Bodydamage/Legdamage</th>
+						<th class="per-45 center" th:text="#{Weapon1.text.rate}">Rate</th>
+						<th class="per-16 center" th:text="#{Weapon1.text.shottype}">Shottype</th>
+						<th class="per-7 center" th:text="#{common.text.update}">Update</th>
+						<th class="per-7 center" th:text="#{common.text.delete}">Delete</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="weapon : ${weaponList}">
+
+						<!-- 武器名表示 -->
+						<td class="data center" th:text="${weapon.weaponname}">ハボック
+
+						</td>
+
+
+						<!-- 武器タイプ表示 -->
+						<td class="data center">
+							<label th:text="${weapon.weapontype.weapontype}" class="data center">アサルトライフル</label>
+						</td>
+
+						<!-- コスト表示 -->
+						<td class="data center">
+							<label th:text="${weapon.cost}" class="data center">400</label>
+						</td>
+
+						<!-- 頭/胴/脚部ダメージ表示 -->
+						<td class="data center">
+							<label th:if="${weapon.headdamage != null ||weapon.bodydamage != null ||weapon.legdamage != null}"
+								th:text="${weapon.headdamage}+'/'+${weapon.bodydamage}+'/'+${weapon.legdamage}+''"
+								class="data center">32/18/14
+							</label>
+						</td>
+
+						<!-- 連射速度表示 -->
+						<td class="data center">
+							<label th:if="${weapon.rate != null}" th:text="${weapon.rate}" class="data center">11.2</label>
+							<label th:if="${weapon.rate == null}" th:text="${weapon.rate}" class="data center">0.0</label>
+						</td>
+
+						<!-- 射撃方式表示 -->
+						<td class="data center">
+							<label th:text="${weapon.shottype.shottype}" class="data center">フルオート</label>
+						</td>
+
+						<!-- 更新ボタン -->
+						<td class="data">
+							<a class="btn btn-success"
+								th:href="@{/weaponHiratsuka/update(id=${weapon.id})}"
+								th:text="#{common.text.update}">Update
+							</a>
+						</td>
+
+						<!-- 削除ボタン -->
+						<td class="data center">
+							<a class="btn btn-danger" style="margin-left: 5%" data-toggle="modal"
+								data-target="#deleteModal" th:text="#{common.text.delete}"
+								th:attr="data-id=${weapon.id}, data-name=${weapon.weaponname}">Delete
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+
+		<!-- ページング用 -->
+		<div th:fragment='paginationbar'>
+			<div th:if="${page != null}">
+				<ul>
+					<li th:class="${page.first} ? 'disabled':''"
+						style="display: inline">
+						<span th:if="${page.first}" th:text="#{common.text.paging.lead}">←lead</span>
+						<a th:if="${not page.first}" onclick="$('#pageForm0').submit()"
+							th:text="#{common.text.paging.lead}">←lead
+						</a>
+					</li>
+					<li th:each='i : ${#numbers.sequence(0, page.totalPages-1)}'
+						th:class="(${i}==${page.number})? 'active' : ''"
+						style="display: inline">
+						<form th:id="'pageForm'+${i}" method="post" th:action="@{${url}(page=${i})}"
+							th:object="${weaponHiratsukaSearchForm}" style="display: inline">
+							<input type="hidden" th:field="*{weaponname}" />
+							<input type="hidden" th:field="*{weapontypeId}" />
+							<input type="hidden" th:field="*{shottypeId}" />
+							<input type="hidden" th:field="*{cost}" />
+						</form>
+						<span th:if='${i}==${page.number}' th:text='${i+1}'>1</span>
+						<a th:if='${i}!=${page.number}' th:onclick="'$(\'#pageForm'+${i}+'\').submit()'">
+							<span th:text='${i+1}'>1</span>
+						</a>
+					</li>
+					<li th:class="${page.last} ? 'disabled':''" style="display: inline">
+						<span th:if="${page.last}" th:text="#{common.text.paging.end}">end➝</span>
+						<a th:if="${not page.last}"
+							th:onclick="'$(\'#pageForm'+(${page.totalPages}-1)+'\').submit()'"
+							th:text="#{common.text.paging.end}">end➝
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<!-- 削除モーダル -->
+	<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+		<div class="modal-dialog" role="document">
+			<form class="form-horizontal" id="deleteForm" th:method="get" th:action="@{delete}">
+				<div class="modal-content">
+					<input type="hidden" id="deleteId" name="id" />
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-name" id="deleteModalLabel" th:text="#{Weapon1.text.delete}">WeaponDelete</h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-sm-12">
+								<p class="lead">
+									<span id="deletename">Weapon name</span>
+								</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="alert alert-danger" role="alert">
+									<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+									<span th:text="#{common.text.warn.delete(#{Weapon1.text.confirm.delete})}"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<a class="btn btn-default" th:text="#{common.text.cansel}" data-dismiss="modal">Cancel </a>
+						<a class="btn btn-danger"
+							onclick="$('#deleteForm').submit()"
+							th:text="#{common.text.delete}">Delete
+						</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div id="bogoCount" class="panel-clear"></div>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+	<script th:src="@{/libs/jquery/jquery.js}"></script>
+	<script th:src="@{/libs/bootstrap/js/bootstrap.js}"></script>
+
+	<!-- 削除モーダル用スクリプト -->
+	<script>
+		$('#deleteModal').on('show.bs.modal', function(event) {
+			var button = $(event.relatedTarget);
+			var weaponId = button.data('id');
+			var weaponname = button.data('name');
+			var modal = $(this);
+			modal.find('#deleteId').attr("value", weaponId);
+			modal.find('#deletename').text(weaponname);
+		});
+	</script>
+</body>
+</html>

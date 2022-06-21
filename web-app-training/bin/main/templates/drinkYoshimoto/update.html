@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>WEBアプリ研修｜飲み物更新</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/css/spring_training.css}" />
+</head>
+<link rel="stylesheet" type="text/css" th:href="@{/css/drinkYoshimoto.css}" />
+<body>
+	<canvas id="canvas"></canvas>
+	<section id="body">
+		<div class="page-header">
+			<h4>
+				<a th:href="@{/}" th:text="#{login.text.app}">研修Webアプリ</a>
+				<small th:text="#{login.text.version}">ver β</small>
+			</h4>
+		</div>
+		<div class="sub-header">
+			<a th:href="@{/drinkYoshimoto}" th:text="#{common.text.back}">Back</a><br />
+			<h1 align="center" th:text="#{drink.text.update}">飲み物更新</h1>
+		</div>
+		<div class="container">
+
+			<div class="resultArea col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+
+				<!-- 入力欄 -->
+				<form method="post" id="drinkYoshimotoInputForm" class="form-horizontal" enctype="multipart/form-data"
+					th:action="@{/drinkYoshimoto/update}" th:object="${drinkYoshimotoInputForm}">
+					<input type="hidden" th:field="*{drinkId}" />
+					<div class="form-group">
+						<label for="name" class="control-label"
+							th:text="#{drink.text.input.name.riquire}">Name(*):</label>
+						<input type="text" th:field="*{drinkName}" class="form-control"
+							th:placeholder="#{drink.text.name}" />
+						<p class="err alert-danger" th:each="err : ${#fields.errors('drinkName')}"
+							th:text="#{${err}(#{drink.text.name})}"></p>
+					</div>
+					<div class="form-group">
+						<label for="maker" class="control-label"
+							th:text="#{drink.text.input.maker}">Maker:</label>
+						<select name="makerId" id="inputMaker" class="form-control select">
+							<option th:each="maker : ${drinkMakerYoshimotoList}"
+									th:value="${maker.makerId}"
+									th:text="${maker.makerName}"
+									th:selected="${maker.makerId == drinkYoshimotoInputForm.makerId}">pulldown
+							</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="category" class="control-label"
+							th:text="#{drink.text.input.category}">Category:</label>
+						<select name="categoryId" id="inputCategory" class="form-control">
+							<option th:each="category : ${drinkCategoryYoshimotoList}"
+									th:value="${category.categoryId}"
+									th:text="${category.categoryName}"
+									th:selected="${category.categoryId == drinkYoshimotoInputForm.categoryId}">pulldown
+							</option>
+						</select>
+					</div>
+					<div class="form-group">
+
+						<!-- 画像を新しく登録 -->
+						<div>
+							<label for="image" class="control-label"
+								th:text="#{drink.text.input.image}">Image:</label>
+							<input type="file" id="file" class="form-control"
+								th:field="*{image}" th:placeholder="#{drink.text.input.image}" />
+							<span th:text="#{drink.text.input.image.attention}">※画像を変更しない場合は「ファイルを選択」ボタンを押さないでください</span>
+						</div>
+
+						<!-- 登録されている画像を削除 -->
+						<div>
+							<div th:if="${imagePass!=null}">
+								<div class="btn-flat-dashed-filled bg-hover-red" data-toggle="modal" data-target="#imageDeleteModal">
+									現在登録している画像を削除する
+								</div>
+							</div>
+							<input type="hidden" id="imageDelFlg" value="0" th:field="*{imageDelFlg}" class="form-control" />
+						</div>
+					</div>
+					<div style="width: 100%;">
+						<a class="btn-flat-dashed-filled bg-hover-green" style="width: 100%; text-align: center;"
+							onclick="$('#drinkYoshimotoInputForm').submit()"
+							th:text="#{common.text.update}">Update
+						</a>
+					</div>
+					<input type="hidden" th:field="*{updateDate}" />
+				</form>
+			</div><!-- end resultArea -->
+		</div><!-- end container -->
+
+		<!-- 画像削除用モーダル -->
+		<div class="modal" id="imageDeleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<form class="form-horizontal" id="inputForm" th:method="post" th:action="@{update}">
+					<div class="modal-content">
+						<input type="hidden" id="imageId" name="id" />
+						<div class="modal-header">
+							<button type="button" class="close" data-dismis="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-sm-12">
+									<p class="lead">
+										<img th:src="@{${imagePass}}" /><br />
+									</p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="alert alert-danger" role="alert">
+										<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+										<span th:text="#{common.text.warn.delete(#{menu.text.image})}"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<a class="btn btn-default" th:text="#{common.text.cansel}" data-dismiss="modal">Cancel</a>
+							<button type="button" class="btn btn-danger" id="deleteImgBtn" th:text="#{common.text.delete}">Delete</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div id="bogoCount" class="panel-clear"></div>
+	</section>
+
+	<!-- javascript読み込み -->
+	<script th:src="@{/libs/drinkYoshimoto.js}"></script>
+
+	<!-- 画像サイズ用スクリプト -->
+	<script>
+		var obj = document.getElementById("file");
+		obj.addEventListener("change",function (evt){
+			var file = evt.target.files;
+
+			//画像のサイズが1MGより大きい場合
+			if(file[0].size > 1000000){
+				alert("サイズが大きすぎます。1MG以下のものを選択してください。");
+				document.getElementById('file').value="";
+			}
+		},false);
+	</script>
+
+	<!-- 画像削除モーダル -->
+	<script>
+		$('#imageDeleteModal').on('show.bs.modal',function(event){
+			var button = $(event.relatedTarget);
+			var id = button.data('id');
+			var name = button.data('title');
+			var image = document.createElement('img');
+			var modal = $(this);
+			modal.find('#imageId').attr("value,id");
+		});
+	</script>
+
+	<!-- 画像フラグ書き換え、id="imgDelFlg"の要素のvalueを1に書き換える -->
+	<script>
+		$('#deleteImgBtn').on('click',function(){
+			$('#imageDeleteModal').modal('hide');
+			const imageDelFlg = document.getElementById('imageDelFlg');
+			const value1 = imageDelFlg.value;
+			if(value1 == "0"){
+				imageDelFlg.value = "1";
+			}
+		});
+	</script>
+
+	<!-- フェードイン -->
+	<script>
+		$(function(){
+			$('#body').hide().fadeIn('slow');
+		});
+	</script>
+</body>
+</html>

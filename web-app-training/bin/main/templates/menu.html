@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title th:text="#{menu.text.title}">Webアプリ研修 | メニュー</title>
+<link rel="stylesheet" type="text/css"
+	th:href="@{/libs/bootstrap/css/bootstrap.css}" />
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/spring_training.css}" />
+</head>
+<body>
+
+	<div class="container">
+		<div th:replace="commons :: header"></div>
+
+		<form id="menu" name="menu" th:action="@{/menu}" method="post"
+			class="form-horizontal">
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button class="btn btn-warning" name="assignment" value="music"
+						onsubmit="this" th:text="#{menu.text.music}">Player</button>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button class="btn btn-warning" name="assignment"
+						value="moviesample" onsubmit="this" th:text="#{menu.text.movie}">Movie</button>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button class="btn btn-warning" name="assignment"
+						value="resipeIshikawa" onsubmit="this"
+						th:text="#{menu.text.resipe}">Resipe</button>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button class="btn btn-warning" name="assignment"
+						value="tokyotakehara" onsubmit="this" th:text="#{menu.text.tokyo}">TokyoWards</button>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button class="btn btn-warning" name="assignment"
+						value="perfumeanzai" onsubmit="this"
+						th:text="#{menu.text.perfume}">Perfume</button>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button class="btn btn-warning" name="assignment"
+						value="penguinKawamura" onsubmit="this"
+						th:text="#{menu.text.penguin}">Penguin</button>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button class="btn btn-warning" name="assignment"
+						value="triathlonMori" onsubmit="this"
+						th:text="#{menu.text.triathlon}">Triathlon</button>
+
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button class="btn btn-warning" name="assignment"
+						value="drinkYoshimoto" onsubmit="this"
+						th:text="#{menu.text.drink}">Drink</button>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button class="btn btn-warning" name="assignment" value="dogKanno"
+						onsubmit="this" th:text="#{menu.text.dog}">Dog</button>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button class="btn btn-warning" name="assignment" value="dramaIge"
+						onsubmit="this" th:text="#{menu.text.drama}">Drama</button>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button class="btn btn-warning" name="assignment"
+						value="playerKuramoto" onsubmit="this" th:text="選手">Players</button>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button class="btn btn-warning" name="assignment"
+						value="nbaplayerstakahashi" onsubmit="this"
+						th:text="#{menu.text.nbaplayers}">Nbaplayers</button>
+
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button class="btn btn-warning" name="assignment"
+						value="vtuberUmehara" onsubmit="this"
+						th:text="#{menu.text.vtubers}">Vtuber</button>
+
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button class="btn btn-warning" name="assignment"
+						value="animeWatanabe" onsubmit="this" th:text="#{menu.text.anime}">Anime</button>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button class="btn btn-warning" name="assignment"
+						value="gameMiura" onsubmit="this"
+						th:text="#{menu.text.game}">game</button>
+
+				</div>
+			</div>
+
+			<div class="form-group">
+			    <div class="col-sm-offset-2 col-sm-10">
+			        <button class="btn btn-warning" name="assignment" value="weaponHiratsuka"
+			            onsubmit="this" th:text="#{menu.text.weapon}">Weapon</button>
+			    </div>
+			</div>
+
+		</form>
+	</div>
+
+	<script th:src="@{/libs/jquery/jquery.js}"></script>
+	<script th:src="@{/libs/bootstrap/js/bootstrap.js}"></script>
+</body>
+</html>

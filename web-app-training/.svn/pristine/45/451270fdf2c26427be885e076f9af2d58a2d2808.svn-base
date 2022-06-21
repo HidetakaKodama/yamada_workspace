@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>研修Webアプリ|perfume更新</title>
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/spring_training.css}" />
+</head>
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/perfumeAnzai.css}" />
+<body>
+	<div class="container">
+		<div class="page-header">
+			<h4>
+				<a th:href="@{/}" th:text="#{login.text.app}">研修Webアプリ</a><small
+					th:text="#{login.text.version}">ver β</small>
+			</h4>
+		</div>
+		<div
+			class="resultArea col-xs-12 col-sm-12 col-md-8 col-md-oddset-2 col-lg-8 col-lg-offset-2">
+			<div class="sub-header">
+				<h1 align="center" th:text="#{perfume.text.update}">Perfume更新</h1>
+				<a th:href="@{/perfumeanzai}" th:text="#{common.text.back}">Back</a>
+			</div>
+
+			<!-- 入力欄 -->
+			<form method="post" id="perfumeAnzaiInputForm"
+				th:action="@{/perfumeanzai/update }"
+				th:object="${perfumeAnzaiInputForm}" class="form-horizontal">
+				<input type="hidden" th:field="*{id}" />
+				<div class="form-group">
+					<label for="name" class="control-label"
+						th:text="#{perfume.text.input.songName.riquire}">SongName(*):</label>
+					<input type="text" th:field="*{songName}" class="form-control"
+						th:placeholder="#{perfume.text.songName}" />
+					<p class="err alert-danger"
+						th:each="err : ${#fields.errors('songName')}"
+						th:text="#{${err}(#{perfume.text.songName})}"></p>
+				</div>
+
+				<div class="form-group">
+					<label for="" class="control-label"
+						th:text="#{perfume.text.input.releaseyear}">ReleaseYear</label> <input
+						type="text" th:field="*{releaseYearStr}" class="form-control"
+						id="inputReleaseYear" th:placeholder="#{perfume.text.releaseYear}" />
+				 	<p class="err alert-danger"
+						th:each="err : ${#fields.errors('releaseYearStr')}"
+						th:text="#{${err}(#{perfume.text.releaseYear})}"></p>
+				</div>
+
+				<div class="form-group">
+					<label for="lyricistName" class="control-label"
+						th:text="#{perfume.text.input.lyricistName}">ReleaseYear</label> <input
+						type="text" th:field="*{lyricistName}" class="form-control"
+						id="inputLyricistName"
+						th:placeholder="#{perfume.text.lyricistName}" />
+					<p class="err alert-danger"
+						th:each="err : ${#fields.errors('lyricistName')}"
+						th:text="#{${err}(#{perfume.text.lyricistName})}"></p>
+				</div>
+
+				<div class="form-group">
+					<label for="album" class="control-label"
+						th:text="#{perfume.text.input.album}">Album:</label> <select
+						name="albumId" id="inputAlbum" class="form-control">
+						<option th:each="album: ${albumAnzaiList}" th:value="${album.id}"
+							th:text="${album.album}"
+							th:selected="${album.id == perfumeAnzaiInputForm.albumId}">pulldown</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="tieup" class="control-label"
+						th:text="#{perfume.text.input.tieup}">Tieup:</label> <select
+						name="tieupId" id="inputTieup" class="form-control">
+						<option th:each="tieup : ${tieupAnzaiList}" th:value="${tieup.id}"
+							th:text="${tieup.tieup}"
+							th:selected="${tieup.id == perfumeAnzaiInputForm.tieupId}">pulldown</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="comment" class="control-label"
+						th:text="#{perfume.text.input.comment}"> Comment:</label>
+					<textarea th:field="*{comment}" cols="" rows="5"
+						class="form-control" id="inputComment"
+						th:placeholder="#{perfume.text.comment}"></textarea>
+						<p class="err alert-danger"
+						th:each="err : ${#fields.errors('comment')}"
+						th:text="#{${err}(#{perfume.text.comment})}"></p>
+				</div>
+				<div class="col-xs-3 col-sm-2">
+					<a class="btn btn-success btn-block"
+						onclick="$('#perfumeAnzaiInputForm').submit()"
+						th:text="#{common.text.update}">Update</a>
+						<br/>
+				</div>
+				<input type="hidden" th:field="*{updateDate}" />
+			</form>
+		</div>
+	</div>
+</body>
+</html>

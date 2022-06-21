@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Web研修アプリ|ドラマ更新</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/css/spring_training.css}" />
+</head>
+<link rel="stylesheet" type="text/css" th:href="@{/css/dramaIge.css}" />
+<body>
+	<section id="body">
+		<div class="page-header">
+			<h4>
+				<a th:href="@{/}" th:text="#{login.text.app}">
+				研修Webアプリ
+				</a>
+				<small th:text="#{login.text.version}">
+				ver β
+				</small>
+			</h4>
+		</div>
+		<div class="resultArea col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2 ">
+			<div class="sub-header">
+				<h1 align="center" th:text="#{drama.text.update}">
+				ドラマ更新
+				</h1>
+				<a th:href="@{/dramaIge}" th:text="#{common.text.back}">
+				Back
+				</a>
+			</div>
+
+			<!-- 入力欄 -->
+			<form method="post" id="dramaIgeInputForm"
+				th:action="@{/dramaIge/update}" th:object="${dramaIgeInputForm}"
+				class="form-horizontal">
+				<input type="hidden" th:field="*{id}"/>
+				<div class="form-group">
+					<label for="name" class="control-label"
+						th:text="#{drama.text.input.title.riquire}">
+						Title(*):
+					</label>
+					<input type="text" th:field="*{dramaTitle}" class="form-control"
+						th:placeholder="#{drama.text.title}" />
+					<p class="err alert-danger" th:each="err : ${#fields.errors('dramaTitle')}"
+						th:text="#{${err}(#{drama.text.title})}">
+					</p>
+				</div>
+				<div class="form-group">
+					<label for="genre" class="control-label" th:text="#{drama.text.input.genre}">
+						Genre:
+					</label>
+					<select name="genreId" id="inputGenre" class="form-control select">
+						<option th:each="genre : ${genreIgeList}"
+								th:value="${genre.id}"
+								th:text="${genre.genre}"
+								th:selected="${genre.id == dramaIgeInputForm.genreId}">
+							pulldown
+						</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="broadcastStation" class="control-label" th:text="#{drama.text.input.broadcastStation}">
+						BroadcastStation:
+					</label>
+					<select name="broadcastStationId" id="inputBroadcastStation" class="form-control select">
+						<option th:each="broadcastStation : ${broadcastStationIgeList}"
+								th:value="${broadcastStation.id}"
+								th:text="${broadcastStation.name}"
+								th:selected="${broadcastStation.id == dramaIgeInputForm.broadcastStationId}">
+							pulldown
+						</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="startYear" class="control-label" th:text="#{drama.text.input.startYear}">
+						StartYear(*):
+					</label>
+					<input type="text" th:field="*{startYearStr}" class="form-control" id="inputStartYear"
+						th:placeholder="#{drama.text.input.startYear}" />
+					<p class="err alert-danger" th:each="err : ${#fields.errors('startYearStr')}"
+						th:text="#{${err}(#{drama.text.startYear})}">
+					</p>
+				</div>
+				<div class="form-group">
+					<label for="startSeason" class="control-label"
+						th:text="#{drama.text.input.selectStartSeason}">
+							selectStartSeason(必須):
+					</label>
+					<select name = "selectStartSeason" id = "inputSelectStartSeason" class = "form-control select">
+						<option th:each="season : ${seasonIgeList}"
+							th:value="${season.season}"
+							th:text="${season.season}"
+							th:selected="${season.season == dramaIgeInputForm.selectStartSeason}">
+								selectStartSeason
+						</option>
+					</select>
+					<p class="err alert-danger" th:each="err : ${#fields.errors('selectStartSeason')}"
+						th:text="#{${err}(#{drama.text.selectStartSeason})}">
+					</p>
+				</div>
+				<div class="form-group">
+					<label for="dayOfWeek" class="control-label"
+						th:text="#{drama.text.input.dayOfWeek}">
+							dayOfWeek:
+					</label>
+					<select name = "dayOfWeek" id = "inputDayOfWeek" class = "form-control select">
+						<option th:each="dayOfWeek : ${dayOfWeekIgeList}"
+								th:value="${dayOfWeek.dayOfWeek}"
+								th:text="${dayOfWeek.dayOfWeek}"
+								th:selected="${dayOfWeek.dayOfWeek == dramaIgeInputForm.dayOfWeek}">
+							dayOfWeek
+						</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="comment" class="control-label"
+						th:text="#{drama.text.input.comment}">
+						Comment:
+					</label>
+					<textarea th:field="*{comment}" cols="" rows="5" onkeyup="count_up(this);"
+						class="form-control" id="inputComment"
+						th:placeholder="#{drama.text.comment}">
+					</textarea>
+					<span id="commentCount" class="float-right">0</span>
+				</div>
+				<div class="col-xs-3 col-sm-2">
+					<a class="btn btn-anime btn-color-green btn-wide"
+						th:text="#{common.text.update}"
+						onclick="$('#dramaIgeInputForm').submit()">
+						Update
+					</a>
+				</div>
+				<input type="hidden" th:field="*{updateDate}" />
+			</form>
+		</div>
+	</section>
+
+	<!-- javascript読み込み -->
+	<script th:src="@{/libs/jquery/jquery.js}"></script>
+	<script type="text/javascript"  src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+	<script th:src="@{/libs/bootstrap/js/bootstrap.js}"></script>
+
+	<!-- コメントカウント -->
+	<script>
+		function count_up(obj){
+			document.getElementById('commentCount').innerHTML = obj.value.length;
+		}
+	</script>
+
+	<!-- フェードイン -->
+	<script>
+		$(function(){
+			$('#body').hide().fadeIn('slow');
+		});
+	</script>
+</body>
+</html>

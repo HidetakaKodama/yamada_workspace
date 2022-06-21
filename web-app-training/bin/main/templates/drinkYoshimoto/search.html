@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>WEBアプリ研修｜飲み物検索画面</title>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/spring_training.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/drinkYoshimoto.css}" />
+</head>
+<body>
+	<canvas id="canvas"></canvas>
+	<section id="body">
+		<div class="page-header">
+			<h4>
+				<a th:href="@{/}" th:text="#{login.text.app}">研修WEBアプリ</a>
+				<small th:text="#{login.text.version}">ver β</small>
+			</h4>
+		</div>
+		<div class="sub-header">
+			<a th:href="@{/menu}" th:text="#{common.text.back}">Back</a><br/>
+			<h1 align="center" th:text="#{drink.text.search}">DrinkSearch</h1>
+		</div>
+
+		<!-- 新規・削除ボタン -->
+		<div style="position: relative; left: 30px;">
+			<form class="form-horizontal" id="deleteCompForm" method="get"
+				action="/drinkYoshimoto/deletecomp"
+				th:object="${drinkYoshimotoSearchFrom}">
+				<div class="form-group">
+					<div class="col-sm-8">
+						<input type="hidden" name="isDelete" th:value="1" />
+					</div>
+				</div>
+			</form>
+			<div class="form-group">
+				<div class="">
+					<a class="btn-flat-dashed-filled bg-hover-yellow" th:href="@{/drinkYoshimoto/insert}"
+						th:text="#{common.text.new}">New
+					</a>
+					<a class="btn-flat-dashed-filled bg-hover-red"
+						onclick="$('#deleteCompForm').submit()"
+						th:text="#{common.text.unnecessary}">UnnecessaryData
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+
+			<!-- メッセージ -->
+			<div class="row">
+				<div class="col-sm-offset-3 col-sm-7">
+
+					<!-- 検索結果なし -->
+					<div class="alert alert-info text-center" role="aleat"
+						th:if="${(drinkYoshimotoSearchForm.drinkName!=null or
+								drinkYoshimotoSearchForm.categoryId!=null or
+								drinkYoshimotoSearchForm.makerId!=null) and
+								drinkYoshimotoList==null}"
+						th:text="#{common.text.info.search}">No Result
+					</div>
+
+					<!-- DB操作後 -->
+					<div class="alert alert-info text-center" role="alert"
+						th:if="${param.result !=null}">
+						<div th:switch="${param.result[0]}">
+							<p th:case="insert" th:text="#{common.text.info.insert} + ':ID=' + ${param.id[0]}"></p>
+							<p th:case="update" th:text="#{common.text.info.update} + ':ID=' + ${param.id[0]}"></p>
+							<p th:case="updatefailed" th:text="#{common.text.info.update.failed}"></p>
+							<p th:case="delete" th:text="#{common.text.info.delete} + ':ID=' + ${param.id[0]}"></p>
+							<p th:case="deletecomp" th:text="#{common.text.info.deletecomp}"></p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 検索条件 -->
+			<form class="form-horizontal" id="searchForm" method="post"
+				action="/drinkYoshimoto/search"
+				th:object="${drinkYoshimotoSearchForm}">
+				<div class="form-group">
+					<label for="drinkName" class="col-sm-2 control-label"
+						th:text="#{drink.text.input.name}">Name:
+					</label>
+					<div class="col-sm-8">
+						<input type="text" th:field="*{drinkName}" class="form-control"
+							id="inputDrinkName" th:placeholder="#{drink.text.search.info}" />
+						<p class="err alert-danger" th:each="err : ${#fields.errors('drinkName')}"
+							th:text="#{${err}(#{drink.text.name})}"></p>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="makerName" class="control-label col-sm-2"
+						th:text="#{drink.text.input.maker}">Maker:</label>
+					<div class="col-sm-8">
+						<select id="inputMaker" name="makerId" class="form-control select">
+							<option th:each="maker : ${drinkMakerYoshimotoList}"
+									th:value="${maker.makerId}"
+									th:text="${maker.makerName}"
+									th:selected="${maker.makerId==drinkYoshimotoSearchForm.makerId}">pulldown
+							</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="categoryName" class="control-label col-sm-2"
+						th:text="#{drink.text.input.category}">Category:</label>
+					<div class="col-sm-8">
+						<select id="inputCategory" name="categoryId" class="form-control select">
+							<option	th:each="category : ${drinkCategoryYoshimotoList}"
+									th:value="${category.categoryId}"
+									th:text="${category.categoryName}"
+									th:selected="${category.categoryId == drinkYoshimotoSearchForm.categoryId}">pulldown
+							</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-4 col-xs-3 col-sm-2">
+						<a class="btn-flat-dashed-filled bg-hover-indigo btn-wide"
+							onclick="$('#searchForm').submit()"
+							th:text="#{common.text.search}">Search </a>
+					</div>
+					<div class="col-xs-3 col-sm-2">
+						<a class="btn-flat-dashed-filled bg-hover-indigo btn-wide"
+							th:href="@{/drinkYoshimoto}" th:text="#{common.text.reset}">Reset
+						</a>
+					</div>
+				</div>
+			</form>
+
+			<!-- 検索結果の表示 -->
+			<section id="resultArea" th:if="${drinkYoshimotoList != null}">
+				<table id="resultTable"
+					class="table table-border table-striped table-hover">
+					<thead>
+						<tr class="success">
+							<th class="per-12 center" th:text="#{drink.text.name}">Name</th>
+							<th class="per-12 center" th:text="#{drink.text.maker}">Maker</th>
+							<th class="per-16 center" th:text="#{drink.text.category}">Category</th>
+							<th class="per-16 center" th:text="#{drink.text.image}">Image</th>
+							<th class="per-7 center" th:text="#{common.text.update}">Update</th>
+							<th class="per-7 center" th:text="#{common.text.delete}">Delete</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="active" th:each="drink : ${drinkYoshimotoList}">
+							<td class="data center">
+								<label  th:text="${drink.drinkName}">コカ・コーラ ゼロ</label>
+							</td>
+							<td class="data center">
+								<label th:if="${drink.drinkMakerYoshimoto != null}"
+									th:text="${drink.drinkMakerYoshimoto.makerName}" class="data center">コカ・コーラ
+								</label>
+							</td>
+							<td class="data center">
+								<label th:if="${drink.drinkCategoryYoshimoto != null}"
+									th:text="${drink.drinkCategoryYoshimoto.categoryName}"
+									class="data center">炭酸飲料
+								</label>
+							</td>
+
+							<!-- 画像 -->
+							<td th:if="${drink.image==null or drink.image.equals('')}" class="data center"><img src="/DrinkImageYoshimoto/Noimage.jpg" height="180" width="180" /></td>
+							<td th:if="${drink.image!=null and !(drink.image.equals(''))}" class="data center"><img th:src="@{${drink.image}}" height="180" width="180" /></td>
+							<td class="data">
+								<a class="btn-flat-dashed-filled bg-hover-green"
+									th:href="@{/drinkYoshimoto/update(id=${drink.drinkId})}"
+									th:text="#{common.text.update}">Update
+								</a>
+							</td>
+							<td class="data center">
+								<a class="btn-flat-dashed-filled bg-hover-red"
+									data-toggle="modal"
+									data-target="#deleteModal" th:text="#{common.text.delete}"
+									th:attr="data-id=${drink.drinkId}, data-title=${drink.drinkName}">Delete
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+
+			<!-- ページング用 -->
+			<div th:fragment='paginationbar'>
+				<div th:if="${page != null}">
+					<ul class="page">
+						<li th:class="${page.first} ? 'disabled':''" style="display: inline;">
+							<span th:if="${page.first}" th:text="#{common.text.paging.lead}">←lead</span>
+							<a th:if="${not page.first}" onclick="$('#pageForm0').submit()"
+							th:text="#{common.text.paging.lead}">←lead</a>
+						</li>
+						<li th:each='i:${#numbers.sequence(0,page.totalPages-1)}'
+							th:class="(${i}==${page.number})? 'active' : '' "
+							style="display: inline;">
+							<form th:id="'pageForm'+${i}" method="post"
+								th:action="@{${url}(page=${i})}"
+								th:object="${drinkYoshimotoSearchForm}" style="display: inline;">
+								<input type="hidden" th:field="*{drinkName}" />
+								<input type="hidden" th:field="*{makerId}" />
+								<input type="hidden" th:field="*{categoryId}" />
+							</form>
+							<span th:if='${i}==${page.number}' th:text='${i+1}'>1</span>
+							<a th:if='${i}!=${page.number}'	th:onclick="'$(\'#pageForm'+${i}+'\').submit()'">
+								<span th:text='${i+1}'>1</span>
+							</a>
+						</li>
+						<li th:class="${page.last} ? 'disabled':''" style="display: inline;">
+							<span th:if="${page.last}" th:text="#{common.text.paging.end}">end→</span>
+							<a th:if="${not page.last}"
+								th:onclick="'$(\'#pageForm'+(${page.totalPages}-1)+'\').submit()'"
+								th:text="#{common.text.paging.end}">end→
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div><!-- end container -->
+
+		<!-- 削除モーダル -->
+		<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+			<div class="modal-dialog" role="document">
+				<form class="form-horizontal" id="deleteForm" th:method="get" th:action="@{delete}">
+					<div class="modal-content">
+						<input type="hidden" id="deleteId" name="id" />
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="deleteModalLabel"
+								th:text="#{drink.text.delete}">DrinkDelete</h4>
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-sm-12">
+									<p class="lead">
+										<span id="deleteName">Drink Name</span>
+									</p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="alert alert-danger" role="alert">
+										<span class="glyphicon glyphicon-exclamation-sing" aria-hidden="true"></span>
+										<span th:text="#{common.text.warn.delete(#{menu.text.drink})}"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<a class="btn btn-default"
+								th:text="#{common.text.cansel}"
+								data-dismiss="modal">Cancel
+							</a>
+							<a class="btn btn-danger" onclick="$('#deleteForm').submit()"
+								th:text="#{common.text.delete}">Delete
+							</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div id="bogoCount" class="panel-clear"></div>
+	</section><!-- end body -->
+
+	<!-- javascript読み込み -->
+	<script type="text/javascript"  src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+	<script th:src="@{/libs/jquery/jquery.js}"></script>
+	<script th:src="@{/libs/bootstrap/js/bootstrap.js}"></script>
+	<script th:src="@{/libs/drinkYoshimoto.js}"></script>
+
+	<!-- 削除モーダル用スクリプト -->
+	<script>
+		$('#deleteModal').on('show.bs.modal',function (event){
+			var button = $(event.relatedTarget);
+			var drinkId = button.data('id');
+			var drinkName = button.data('title');
+			var modal = $(this);
+			modal.find('#deleteId').attr("value",drinkId);
+			modal.find('#deleteName').text(drinkName);
+		});
+	</script>
+
+	<!-- フェードイン -->
+	<script>
+		$(function(){
+			$('#body').hide().fadeIn('slow');
+		});
+	</script>
+</body>
+</html>

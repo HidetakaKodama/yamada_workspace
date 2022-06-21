@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Webアプリ研修|東京23区|新規追加</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/css/tokyoTakehara.css}" />
+</head>
+<body>
+	<div class="container">
+		<div class="page-header">
+			<h4>
+				<a th:href="@{/}" th:text="#{login.text.app}">研修Webアプリ</a><small th:text="#{login.text.version}">ver β</small>
+			</h4>
+		</div>
+		<div class="resultArea col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2 ">
+			<div class="sub-header">
+				<h1 align="center" th:text="#{tokyo.text.insert}">WardInsert</h1>
+				<a th:href="@{/tokyotakehara}" th:text="#{common.text.back}">Back</a>
+			</div>
+
+			<!-- 入力欄 -->
+			<form method="post" id="tokyoTakeharaInputForm"
+				th:action="@{/tokyotakehara/insert}" th:object="${tokyoTakeharaInputForm}"
+				class="form-horizontal" enctype="multipart/form-data">
+				<div class="form-group">
+					<label for="wardName" class="control-label"
+						th:text="#{tokyo.text.name.require}"> WardName(*):</label>
+					<input type="text" th:field="*{wardName}" class="form-control"
+						th:placeholder="#{tokyo.inputrule.name}" />
+					<p class="err alert-danger" th:each="err : ${#fields.errors('wardName')}"
+						th:text="#{${err}(#{tokyo.text.name})}"></p>
+				</div>
+				<div class="form-group">
+					<label for="locationName" class="control-label"
+						th:text="#{tokyo.text.location.require}">Location(*):</label>
+					<select id="inputLocation" name="locationId"
+						class="form-control select">
+						<option th:each="location : ${locationTakeharaList}"
+								th:value="${location.locationId}"
+								th:text="${location.locationName}"
+								th:selected="${location.locationId == tokyoTakeharaInputForm.locationId}">pulldown</option>
+					</select>
+					<p class="err alert-danger" th:each="err : ${#fields.errors('locationId')}"
+						th:text="#{${err}(#{tokyo.text.location})}"></p>
+				</div>
+				<div class="form-group">
+					<label for="population" class="control-label"
+						th:text="#{tokyo.text.population}">Population:</label>
+					<input type="text" th:field="*{populationStr}" class="form-control" id="inputPopulation"
+						th:placeholder="#{tokyo.inputrule.number}"/>
+					<p class="err alert-danger" th:each="err : ${#fields.errors('populationStr')}"
+						th:text="#{${err}(#{tokyo.text.population})}"></p>
+				</div>
+				<div class="form-group">
+					<label for="area" class="control-label"
+						th:text="#{tokyo.text.area}">area:</label>
+					<input type="text" th:field="*{areaStr}" class="form-control" id="inputArea"
+						th:placeholder="#{tokyo.inputrule.number}"/>
+					<p class="err alert-danger" th:each="err : ${#fields.errors('areaStr')}"
+						th:text="#{${err}}"></p>
+				</div>
+				<div class="form-group">
+					<label for="wardOffice" class="control-label"
+						th:text="#{tokyo.text.office}">WardOffice:</label>
+					<input type="text" th:field="*{wardOffice}" class="form-control" id="inputWardOffice"
+						th:placeholder="#{tokyo.inputrule.office}"/>
+					<p class="err alert-danger" th:each="err : ${#fields.errors('wardOffice')}"
+						th:text="#{${err}(#{tokyo.text.office})}"></p>
+				</div>
+				<div class="form-group">
+					<label for="averageAnnualIncome" class="control-label"
+						th:text="#{tokyo.text.income}">AverageAnnualIncome:</label>
+					<input type="text" th:field="*{averageAnnualIncomeStr}" class="form-control" id="inputAverageAnnualIncome"
+						th:placeholder="#{tokyo.inputrule.number}"/>
+					<p class="err alert-danger" th:each="err : ${#fields.errors('averageAnnualIncomeStr')}"
+						th:text="#{${err}(#{tokyo.text.income})}"></p>
+				</div>
+				<div class="form-group">
+					<label for="officialLandPrice" class="control-label"
+						th:text="#{tokyo.text.landprice}">OfficialLandPrice:</label>
+					<input type="text" th:field="*{officialLandPriceStr}" class="form-control" id="inputArea"
+						th:placeholder="#{tokyo.inputrule.number}"/>
+					<p class="err alert-danger" th:each="err : ${#fields.errors('officialLandPriceStr')}"
+						th:text="#{${err}(#{tokyo.text.landprice})}"></p>
+				</div>
+				<div class="form-group">
+					<label for="performer" class="control-label"
+						th:text="#{tokyo.text.performer}">Performer:</label>
+					<input type="text" th:field="*{performer}" class="form-control" id="inputPerformer"/>
+					<p class="err alert-danger" th:each="err : ${#fields.errors('performer')}"
+						th:text="#{${err}(#{tokyo.text.performer})}"></p>
+				</div>
+				<div class="form-group">
+					<div>
+					<!-- 未実装 -->
+						<label for="symbol" class="control-label"
+							th:text="#{tokyo.text.symbol}"> Symbol:</label> <input
+							type="file" id="file" th:field="*{symbol}" class="form-control" />
+					</div>
+				</div>
+				<div class="col-xs-3 col-sm-2">
+					<a class="btn btn-success center-block"
+						onclick="$('#tokyoTakeharaInputForm').submit()"
+						th:text="#{common.text.insert}">Insert</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
